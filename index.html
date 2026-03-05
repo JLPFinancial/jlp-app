@@ -1761,6 +1761,7 @@ function submitForm() {
       assets: assetRows,
       liabilities: liabRows,
       expenses: expenseRows,
+      documents: uploadedDocs,
     };
 
     // Save to Supabase (non-blocking)
@@ -1789,7 +1790,7 @@ function submitForm() {
         assets: app.assets,
         liabilities: app.liabilities,
         expenses: app.expenses,
-        documents: app.uploadedDocs,
+        documents: app.documents,
       };
       const res = await fetch('https://gxwwcrcllhaaoewgcbeo.supabase.co/rest/v1/applications', {
         method: 'POST',
