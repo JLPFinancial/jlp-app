@@ -364,10 +364,7 @@ input[type=file] { display: none; }
 </style>
 </head>
 <body>
-<a href="jlp-crm.html" style="position:fixed;bottom:20px;right:20px;z-index:9999;background:#0f2140;color:#c9a84c;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;padding:10px 18px;border-radius:40px;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.25);display:flex;align-items:center;gap:7px;letter-spacing:.3px">
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-  Open CRM
-</a>
+
 
 <!-- HEADER -->
 <header class="app-header">
@@ -578,7 +575,7 @@ input[type=file] { display: none; }
       </div>
       <div class="row r2">
         <div class="fld"><label class="lbl">Mobile <span class="req">*</span></label><input type="tel" id="a1Mobile" placeholder="04XX XXX XXX"></div>
-        <div class="fld"><label class="lbl">Email <span class="req">*</span></label><input type="email" id="a1Email" placeholder="you@example.com"></div>
+        <div class="fld"><label class="lbl">Email <span class="req">*</span></label><input type="email" id="a1Email" placeholder="your-email-here"></div>
       </div>
       <hr>
       <div class="fld" style="margin-bottom:14px">
@@ -694,7 +691,7 @@ input[type=file] { display: none; }
       </div>
       <div class="row r2">
         <div class="fld"><label class="lbl">Mobile <span class="req">*</span></label><input type="tel" id="a2Mobile" placeholder="04XX XXX XXX"></div>
-        <div class="fld"><label class="lbl">Email <span class="req">*</span></label><input type="email" id="a2Email" placeholder="you@example.com"></div>
+        <div class="fld"><label class="lbl">Email <span class="req">*</span></label><input type="email" id="a2Email" placeholder="your-email-here"></div>
       </div>
       <hr>
       <div class="fld" style="margin-bottom:14px">
@@ -1115,7 +1112,7 @@ input[type=file] { display: none; }
     <div class="card-head"><div class="card-title">Applicant 1 – Documents</div></div>
     <div class="card-body">
       <div style="font-size:13px;color:var(--g500);margin-bottom:16px;padding:10px 14px;background:var(--g50);border-radius:8px;border:1px solid var(--g200)">
-         Text or email documents to <a href="tel:0433773021" style="color:var(--blue);font-weight:600">0433 773 021</a> or <a href="mailto:info@jlpfinancial.com.au" style="color:var(--blue);font-weight:600">info&#64;jlpfinancial.com.au</a>
+         Text or email documents to <a href="tel:0433773021" style="color:var(--blue);font-weight:600">0433 773 021</a>
       </div>
       <div id="docList1"><!-- rendered by JS --></div>
     </div>
@@ -1188,7 +1185,7 @@ input[type=file] { display: none; }
     <p class="success-text">Thank you for completing your loan application. One of our team members will review your details and be in touch shortly.</p>
     <div class="success-contact">
       <strong style="color:var(--g900)">Questions? Contact us</strong><br>
-      <a href="mailto:info@jlpfinancial.com.au">info&#64;jlpfinancial.com.au</a> · <a href="tel:0433773021">0433 773 021</a>
+      <a href="mailto:info[at]jlpfinancial.com.au" data-email="true">info[at]jlpfinancial.com.au</a> · <a href="tel:0433773021">0433 773 021</a>
     </div>
   </div>
 </div>
@@ -1609,15 +1606,15 @@ async function markUploaded(input, stId, btnId) {
       btnEl.className = 'upload-btn done';
     } else {
       const err = await res.text();
-      console.warn('Upload failed:', err);
-      stEl.textContent = '✗ Upload failed';
+      console.error('Upload failed [' + res.status + ']:', err);
+      stEl.textContent = '✗ Failed: ' + res.status;
       stEl.className = 'doc-status';
       btnEl.textContent = '↑ Retry';
       btnEl.className = 'upload-btn';
     }
   } catch(e) {
-    console.warn('Upload error:', e);
-    stEl.textContent = '✗ Upload failed';
+    console.error('Upload error:', e.message);
+    stEl.textContent = '✗ Error: ' + e.message;
     stEl.className = 'doc-status';
     btnEl.textContent = '↑ Retry';
     btnEl.className = 'upload-btn';
@@ -1863,7 +1860,7 @@ function submitForm() {
       + '<p class="success-text">Thank you for completing your loan application. One of our team members will review your details and be in touch with you shortly.</p>'
       + '<div class="success-contact">'
       + '<strong style="color:var(--g900)">Questions? Contact us</strong><br>'
-      + '<a href="mailto:info@jlpfinancial.com.au">info@jlpfinancial.com.au</a> &middot; <a href="tel:0433773021">0433 773 021</a>'
+      + '<a href="tel:0433773021">0433 773 021</a> &middot; <a href="tel:0433773021">0433 773 021</a>'
       + '</div>'
       + '</div>';
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1881,11 +1878,4 @@ function toggleCustomCb(cbId, boxId, checkId, fieldsId, rowId) {
   if (rowId) toggleClass(rowId, cb.checked, 'on');
 }
 
-function selectIncOpt(el, groupId) {
-  const parent = document.getElementById(groupId);
-  parent.querySelectorAll('.ch').forEach(b => b.classList.remove('sel'));
-  el.classList.add('sel');
-}
-</script>
-</body>
-</html>
+function selec
