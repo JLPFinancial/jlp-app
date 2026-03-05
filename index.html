@@ -1214,7 +1214,7 @@ input[type=file] { display: none; }
 
 <div class="toast" id="toast"></div>
 
-<script>
+<script data-cfasync="false">
 function toggleCustomCb(cbId, boxId, checkId, fieldsId, rowId) {
   const cb = document.getElementById(cbId);
   cb.checked = !cb.checked;
@@ -1231,7 +1231,7 @@ function selectIncOpt(el, groupId) {
   parent.querySelectorAll('.ch').forEach(b => b.classList.remove('sel'));
   el.classList.add('sel');
 }
-</script><script>
+
 // --- STATE ---
 const SESSION_APP_ID = 'APP-' + Date.now();
 let state = {
