@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+  <meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JLP Financial – Loan Application</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
@@ -575,7 +576,7 @@ input[type=file] { display: none; }
       </div>
       <div class="row r2">
         <div class="fld"><label class="lbl">Mobile <span class="req">*</span></label><input type="tel" id="a1Mobile" placeholder="04XX XXX XXX"></div>
-        <div class="fld"><label class="lbl">Email <span class="req">*</span></label><input type="email" id="a1Email" placeholder=""></div>
+        <div class="fld"><label class="lbl">Email <span class="req">*</span></label><input type="email" id="a1Email" placeholder="you@example.com"></div>
       </div>
       <hr>
       <div class="fld" style="margin-bottom:14px">
@@ -691,7 +692,7 @@ input[type=file] { display: none; }
       </div>
       <div class="row r2">
         <div class="fld"><label class="lbl">Mobile <span class="req">*</span></label><input type="tel" id="a2Mobile" placeholder="04XX XXX XXX"></div>
-        <div class="fld"><label class="lbl">Email <span class="req">*</span></label><input type="email" id="a2Email" placeholder=""></div>
+        <div class="fld"><label class="lbl">Email <span class="req">*</span></label><input type="email" id="a2Email" placeholder="you@example.com"></div>
       </div>
       <hr>
       <div class="fld" style="margin-bottom:14px">
@@ -1112,7 +1113,7 @@ input[type=file] { display: none; }
     <div class="card-head"><div class="card-title">Applicant 1 – Documents</div></div>
     <div class="card-body">
       <div style="font-size:13px;color:var(--g500);margin-bottom:16px;padding:10px 14px;background:var(--g50);border-radius:8px;border:1px solid var(--g200)">
-         Text or email documents to <a href="tel:0433773021" style="color:var(--blue);font-weight:600">0433 773 021</a> or 
+         Text or email documents to <a href="tel:0433773021" style="color:var(--blue);font-weight:600">0433 773 021</a> or <span class="__cf_email__" data-cfemail="dbb2b5bdb49bb1b7abbdb2b5bab5b8b2bab7f5b8b4b6f5baae">[email&#160;protected]</span>
       </div>
       <div id="docList1"><!-- rendered by JS --></div>
     </div>
@@ -1185,7 +1186,7 @@ input[type=file] { display: none; }
     <p class="success-text">Thank you for completing your loan application. One of our team members will review your details and be in touch shortly.</p>
     <div class="success-contact">
       <strong style="color:var(--g900)">Questions? Contact us</strong><br>
-       · <a href="tel:0433773021">0433 773 021</a>
+      <span class="__cf_email__" data-cfemail="f990979f96b99395899f909798979a909895d79a9694d7988c">[email&#160;protected]</span> · <a href="tel:0433773021">0433 773 021</a>
     </div>
   </div>
 </div>
@@ -1580,7 +1581,7 @@ async function markUploaded(input, stId, btnId) {
 
   try {
     // Use app ID or timestamp as folder
-    const appId = SESSION_APP_ID;
+    const appId = (sessionStorage.getItem('_aid') || sessionStorage.setItem('_aid','APP-'+Date.now()) || sessionStorage.getItem('_aid'));
     const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
     const path = appId + '/' + stId + '_' + safeName;
 
@@ -1703,7 +1704,7 @@ function submitForm() {
       if (val && val !== '0') expenseRows.push({ label: lbl, amount: val });
     });
     const app = {
-      id: SESSION_APP_ID,
+      id: (sessionStorage.getItem('_aid') || sessionStorage.setItem('_aid','APP-'+Date.now()) || sessionStorage.getItem('_aid')),
       submittedAt: new Date().toISOString(),
       status: 'New',
       notes: '',
@@ -1859,7 +1860,7 @@ function submitForm() {
       + '<p class="success-text">Thank you for completing your loan application. One of our team members will review your details and be in touch with you shortly.</p>'
       + '<div class="success-contact">'
       + '<strong style="color:var(--g900)">Questions? Contact us</strong><br>'
-      + '<a href="tel:0433773021"></a> &middot; <a href="tel:0433773021">0433 773 021</a>'
+      + '<a href="tel:0433773021">info@jlpfinancial.com.au</a> &middot; <a href="tel:0433773021">0433 773 021</a>'
       + '</div>'
       + '</div>';
     window.scrollTo({ top: 0, behavior: 'smooth' });
