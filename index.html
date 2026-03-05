@@ -1563,7 +1563,7 @@ function buildDocs(n) {
       return `<div class="doc-row">
         <div class="doc-info"><div><div class="doc-name">${item}</div><div class="doc-status" id="st_${sid}">Not uploaded</div></div></div>
         <label class="upload-btn" id="btn_${sid}" for="file_${sid}">↑ Upload</label>
-        <input type="file" id="file_${sid}" accept="image/*,.pdf,.heic,.heif" onchange="markUploaded(this,'st_${sid}','btn_${sid}')">
+        <input type="file" id="file_${sid}" data-slot-name="${item}" accept="image/*,.pdf,.heic,.heif" onchange="markUploaded(this,'st_${sid}','btn_${sid}')">
       </div>`;
     }).join('')}
   `).join('');
@@ -1580,10 +1580,13 @@ async function markUploaded(input, stId, btnId) {
   btnEl.className = 'upload-btn';
 
   try {
-    // Use app ID or timestamp as folder
     const appId = (sessionStorage.getItem('_aid') || sessionStorage.setItem('_aid','APP-'+Date.now()) || sessionStorage.getItem('_aid'));
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-    const path = appId + '/' + stId + '_' + safeName;
+    // Use slot name as filename if available, otherwise original filename
+    const slotName = input.dataset.slotName;
+    const ext = file.name.includes('.') ? file.name.split('.').pop() : 'pdf';
+    const displayName = slotName ? slotName + '.' + ext : file.name;
+    const safeName = displayName.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const path = appId + '/' + safeName;
 
     const res = await fetch('https://gxwwcrcllhaaoewgcbeo.supabase.co/storage/v1/object/documents/' + path, {
       method: 'POST',
@@ -1599,7 +1602,8 @@ async function markUploaded(input, stId, btnId) {
     if (res.ok) {
       // Store path on the input element for later retrieval
       input.dataset.storagePath = path;
-      input.dataset.fileName = file.name;
+      input.dataset.fileName = displayName;
+      input.dataset.slotName = slotName || displayName;
       // Save slot name for later collection
       const nameEl = input.closest('.doc-row')?.querySelector('.doc-name');
       if (nameEl) input.dataset.slotName = nameEl.textContent.trim();
