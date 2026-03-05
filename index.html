@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JLP Financial – Loan Application</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #173054;
+  --navy-2: #0f2140;
+  --navy-3: #1e3a6e;
+  --blue: #2a327f;
+  --blue-hover: #1f2660;
+  --gold: #46c5e3;
+  --gold-light: #7dd6ec;
+  --gold-pale: #eef9fd;
+  --bg: #f0f3f8;
+  --white: #ffffff;
+  --g50: #f8fafc;
+  --g100: #f1f5f9;
+  --g200: #e2e8f0;
+  --g300: #cbd5e1;
+  --g400: #94a3b8;
+  --g500: #64748b;
+  --g600: #475569;
+  --g700: #334155;
+  --g900: #0f172a;
+  --red: #dc2626;
+  --red-bg: #fef2f2;
+  --green: #16a34a;
+  --green-bg: #f0fdf4;
+  --amber: #d97706;
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(13,27,46,.07);
+  --shadow-md: 0 4px 6px rgba(0,0,0,.04), 0 10px 30px rgba(13,27,46,.1);
+}
+
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--g900); min-height: 100vh; font-size: 14px; overflow-x: hidden; }
+
+/* -- HEADER -- */
+.app-header {
+  background: #ffffff;
+  height: 60px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 2px 16px rgba(0,0,0,.25);
+}
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-mark { width: 34px; height: 34px; background: var(--gold); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-weight: 600; font-size: 14px; color: var(--navy); letter-spacing: -.5px; }
+.logo-badge { width: 44px; height: 44px; background: #e8b84b; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 5px; }
+.logo-name { font-family: 'Playfair Display', serif; font-size: 17px; color: var(--navy); font-weight: 600; }
+.logo-tagline { font-size: 10px; color: rgba(255,255,255,0.6); letter-spacing: 1.8px; text-transform: uppercase; display: block; line-height: 1; margin-top: 1px; }
+.header-right { font-size: 12px; color: var(--g500); }
+.header-right a { color: var(--blue); text-decoration: none; font-weight: 500; }
+.autosave { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--g500); transition: opacity .3s; opacity: 0; }
+.autosave.show { opacity: 1; }
+.autosave svg { color: #4ade80; }
+
+/* -- PROGRESS -- */
+.progress-wrap {
+  background: var(--navy);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  overflow-x: auto; scrollbar-width: none;
+}
+.progress-wrap::-webkit-scrollbar { display: none; }
+.progress-inner {
+  display: flex;
+  align-items: stretch;
+  min-width: max-content;
+  padding: 0 24px;
+  margin: 0 auto;
+}
+.progress-wrap {
+  display: flex;
+  justify-content: center;
+}
+.prog-step {
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px 16px;
+  cursor: pointer;
+  position: relative;
+  transition: background .15s;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+.prog-step:hover { background: rgba(255,255,255,.04); }
+.prog-num {
+  width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+  flex-shrink: 0;
+}
+.prog-label { font-size: 12px; font-weight: 500; }
+
+.prog-step.inactive .prog-num { background: rgba(255,255,255,.08); color: rgba(255,255,255,.35); }
+.prog-step.inactive .prog-label { color: rgba(255,255,255,.35); }
+.prog-step.done .prog-num { background: #46c5e3; color: #173054; }
+.prog-step.done .prog-label { color: rgba(255,255,255,.6); }
+.prog-step.active { border-bottom-color: #46c5e3; }
+.prog-step.active .prog-num { background: #46c5e3; color: #173054; }
+.prog-step.active .prog-label { color: white; font-weight: 600; }
+
+/* -- MAIN -- */
+.main { max-width: 800px; margin: 0 auto; padding: 36px 20px 100px; }
+
+/* -- SECTIONS -- */
+.section { display: none; }
+.section.active { display: block; animation: up .28s ease; }
+@keyframes up { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+.sec-header { margin-bottom: 28px; }
+.sec-eye { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
+.sec-title { font-family: 'DM Sans', sans-serif; font-size: 26px; font-weight: 600; color: var(--navy); line-height: 1.2; letter-spacing: -0.3px; }
+.sec-desc { font-size: 13px; color: var(--g500); margin-top: 5px; line-height: 1.6; }
+
+/* -- CARD -- */
+.card {
+  background: white; border-radius: 14px;
+  border: 1px solid var(--g200);
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.card-head {
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid var(--g100);
+  display: flex; align-items: center; gap: 10px;
+}
+.card-icon { width: 30px; height: 30px; background: var(--g50); border: 1px solid var(--g200); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; } .card-icon:empty { display: none; }
+.card-title { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--navy); }
+.card-body { padding: 20px 24px; }
+.card-body + .card-body { padding-top: 0; border-top: 1px solid var(--g100); margin-top: 4px; padding-top: 16px; }
+
+/* -- FORM ELEMENTS -- */
+.row { display: grid; gap: 14px; margin-bottom: 14px; }
+.row.r1 { grid-template-columns: 1fr; }
+.row.r2 { grid-template-columns: 1fr 1fr; }
+.row.r3 { grid-template-columns: 1fr 1fr 1fr; }
+.row.r21 { grid-template-columns: 1fr 1fr auto; }
+.row.r211 { grid-template-columns: 2fr 1fr 1fr; }
+.row.r121 { grid-template-columns: 1fr 2fr 1fr; }
+
+.fld { display: flex; flex-direction: column; gap: 5px; }
+
+label.lbl {
+  font-size: 11.5px; font-weight: 600; color: var(--g700);
+  letter-spacing: .2px;
+}
+.req { color: var(--red); }
+.opt { color: var(--g400); font-weight: 400; font-size: 11px; }
+
+input, select, textarea {
+  width: 100%; height: 42px;
+  padding: 0 12px;
+  border: 1.5px solid var(--g200);
+  border-radius: var(--radius);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; color: var(--g900);
+  background: var(--g50);
+  outline: none; transition: all .15s;
+  appearance: none; -webkit-appearance: none;
+}
+input:focus, select:focus { border-color: var(--blue); background: white; box-shadow: 0 0 0 3px rgba(26,86,219,.07); }
+input.err, select.err { border-color: var(--red); }
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%2364748b' d='M5 7L1 3h8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+  padding-right: 30px; cursor: pointer;
+}
+.pre { position: relative; }
+.pre-sym { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--g500); pointer-events: none; font-size: 13px; }
+.pre input { padding-left: 22px; }
+
+.err-msg { font-size: 11px; color: var(--red); margin-top: 2px; display: none; }
+.err-msg.show { display: block; }
+
+/* -- CHOICE BUTTONS -- */
+.choices { display: flex; flex-wrap: wrap; gap: 7px; }
+.choices.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.choices.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.choices.grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
+
+.ch {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 5px; padding: 12px 14px;
+  border: 1.5px solid var(--g200);
+  border-radius: var(--radius);
+  background: var(--g50);
+  cursor: pointer; transition: all .12s;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12.5px; font-weight: 500; color: var(--g600);
+  text-align: center; min-width: 70px;
+  user-select: none;
+}
+.ch:hover { border-color: #93c5fd; background: rgba(59,130,246,.03); }
+.ch.sel { border-color: var(--blue); background: rgba(26,86,219,.05); color: var(--blue); font-weight: 600; }
+.ch.sel .chi { filter: none; }
+.ch-icon { font-size: 22px; line-height: 1; display:flex; align-items:center; justify-content:center; color: var(--g400); transition: color .12s; }
+.ch:hover .ch-icon, .ch.sel .ch-icon { color: var(--blue); }
+
+.ch.large { padding: 20px 16px; font-size: 14px; }
+.ch.large .ch-icon { font-size: 28px; }
+
+.ch.inline { flex-direction: row; padding: 8px 14px; gap: 6px; font-size: 13px; min-width: unset; }
+
+/* -- LOAN SUMMARY -- */
+.loan-box {
+  background: linear-gradient(135deg, #173054 0%, #2a327f 100%);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin: 4px 0 14px;
+}
+.loan-box-lbl { font-size: 12px; color: rgba(255,255,255,.6); font-weight: 500; }
+.loan-box-amt { font-family: 'DM Sans', sans-serif; font-size: 30px; color: var(--gold-light); font-weight: 700; }
+
+/* -- DIVIDER -- */
+hr { border: none; border-top: 1px solid var(--g100); margin: 18px 0; }
+
+/* -- SUBSECTION HEADING -- */
+.sub-head { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--g100); display: flex; align-items: center; gap: 7px; }
+.sub-head-icon { font-size: 15px; }
+
+/* -- ALERT -- */
+.alert { display: flex; gap: 10px; padding: 12px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 12px; }
+.alert-warn { background: #fff7ed; border: 1px solid #fed7aa; color: #92400e; }
+.alert-err { background: var(--red-bg); border: 1px solid #fecaca; color: #991b1b; }
+.alert-info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+.alert-icon { flex-shrink: 0; font-size: 16px; }
+.alert strong { font-weight: 700; display: block; margin-bottom: 2px; }
+
+/* -- TOGGLE / CHECKBOX -- */
+.toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 4px 0;
+  border: none;
+  cursor: pointer; transition: all .12s;
+  margin-bottom: 12px;
+  user-select: none;
+  width: fit-content;
+}
+.toggle-row input[type=checkbox] { display: none; }
+.toggle-row .custom-cb {
+  width: 18px; height: 18px; border-radius: 4px;
+  border: 1.5px solid var(--g300);
+  background: white;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all .15s;
+}
+.toggle-row input[type=checkbox]:checked ~ .toggle-text .custom-cb,
+.toggle-row.on .custom-cb {
+  background: var(--blue); border-color: var(--blue);
+}
+.toggle-row:hover .custom-cb { border-color: var(--blue); }
+.toggle-text { font-size: 13px; color: var(--g700); line-height: 1.5; display: flex; align-items: center; gap: 8px; }
+.toggle-text strong { color: var(--g900); display: inline; font-size: 13.5px; white-space: nowrap; }
+.toggle-text { font-size: 13px; color: var(--g700); line-height: 1.5; }
+.toggle-text strong { color: var(--g900); display: inline; font-size: 13.5px; white-space: nowrap; }
+
+.cond { display: none; }
+.cond.show { display: block; }
+
+/* -- INDENT SECTION -- */
+.indent { border-left: 2px solid rgba(26,86,219,.15); padding-left: 16px; margin-top: 12px; }
+
+/* -- ENTRIES (assets/liabilities) -- */
+.entry { display: flex; gap: 8px; align-items: flex-end; background: var(--g50); border: 1px solid var(--g200); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; }
+.entry-fields { display: flex; gap: 8px; flex: 1; flex-wrap: wrap; }
+.entry-fld { display: flex; flex-direction: column; gap: 4px; }
+.entry-fld.grow { flex: 1; min-width: 100px; }
+.entry-lbl { font-size: 10.5px; font-weight: 600; color: var(--g500); letter-spacing: .3px; text-transform: uppercase; }
+.entry-fld input, .entry-fld select { height: 36px; font-size: 13px; }
+.del-btn { width: 32px; height: 32px; flex-shrink: 0; border: none; background: rgba(220,38,38,.07); color: var(--red); border-radius: 7px; cursor: pointer; font-size: 17px; display: flex; align-items: center; justify-content: center; transition: background .15s; margin-bottom: 1px; }
+.del-btn:hover { background: rgba(220,38,38,.14); }
+
+.add-btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 24px; border: 2px dashed var(--blue); border-radius: var(--radius); background: rgba(26,86,219,.04); color: var(--blue); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all .14s; width: 100%; justify-content: center; margin-top: 8px; }
+.add-btn:hover { border-style: solid; background: rgba(26,86,219,.08); }
+
+.empty-state { font-size: 13px; color: var(--g400); font-style: italic; padding: 8px 0; }
+
+/* -- EXPENSES -- */
+.exp-grid { display: flex; flex-direction: column; }
+.exp-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--g50); }
+.exp-row:last-child { border-bottom: none; }
+.exp-lbl { font-size: 13.5px; color: var(--g700); }
+.exp-input-wrap { position: relative; width: 130px; }
+.exp-input-wrap .pre-sym { left: 10px; }
+.exp-input-wrap input { height: 36px; width: 100%; padding-left: 22px; padding-right: 10px; text-align: right; font-size: 13px; }
+
+/* -- DOCUMENTS -- */
+.doc-group-lbl { font-size: 10px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; color: var(--g400); margin: 18px 0 10px; }
+.doc-group-lbl:first-child { margin-top: 0; }
+.doc-row { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; border: 1px solid var(--g200); border-radius: var(--radius); margin-bottom: 6px; background: var(--g50); transition: all .15s; }
+.doc-row:hover { border-color: var(--g300); background: white; }
+.doc-info { display: flex; align-items: center; gap: 10px; }
+.doc-icon { font-size: 17px; }
+.doc-name { font-size: 13px; font-weight: 500; color: var(--g900); }
+.doc-status { font-size: 11px; color: var(--g400); margin-top: 1px; }
+.doc-status.uploaded { color: var(--green); font-weight: 500; }
+.upload-btn { display: inline-flex; align-items: center; gap: 5px; padding: 6px 13px; border: 1.5px solid var(--g200); border-radius: 8px; background: white; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; color: var(--g600); cursor: pointer; transition: all .13s; }
+.upload-btn:hover { border-color: var(--blue); color: var(--blue); }
+.upload-btn.done { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+input[type=file] { display: none; }
+
+/* -- SWITCH -- */
+.switch-row { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; border: 1px solid var(--g200); border-radius: var(--radius); margin-bottom: 10px; }
+.switch-lbl { font-size: 13px; font-weight: 500; color: var(--g700); }
+.switch { position: relative; width: 40px; height: 22px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; inset: 0; background: var(--g300); border-radius: 22px; cursor: pointer; transition: background .2s; }
+.slider:before { content: ''; position: absolute; height: 16px; width: 16px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+.switch input:checked + .slider { background: var(--blue); }
+.switch input:checked + .slider:before { transform: translateX(18px); }
+
+/* -- PRIVACY BOX -- */
+.privacy-box { background: var(--g50); border: 1px solid var(--g200); border-radius: var(--radius); padding: 14px 18px; font-size: 13px; color: var(--g500); line-height: 1.75; margin-bottom: 18px; }
+
+/* -- NAV -- */
+.nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--g200); }
+.btn { display: inline-flex; align-items: center; gap: 7px; padding: 11px 24px; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .13s; border: none; }
+.btn-primary { background: var(--navy); color: white; box-shadow: 0 4px 12px rgba(13,27,46,.18); }
+.btn-primary:hover { background: var(--navy-2); transform: translateY(-1px); }
+.btn-ghost { background: transparent; color: var(--g500); border: 1.5px solid var(--g200); }
+.btn-ghost:hover { border-color: var(--g400); color: var(--g700); }
+.btn-gold { background: linear-gradient(135deg, #2a327f 0%, #46c5e3 100%); color: white; font-size: 15px; padding: 13px 32px; box-shadow: 0 4px 14px rgba(70,197,227,.3); }
+.btn-gold:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(70,197,227,.4); }
+
+/* -- TOAST -- */
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--navy); color: white; padding: 11px 22px; border-radius: 40px; font-size: 13.5px; font-weight: 500; box-shadow: var(--shadow-md); transition: transform .3s cubic-bezier(.34,1.56,.64,1); z-index: 999; white-space: nowrap; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* -- GOOGLE -- */
+.google-row { text-align: center; font-size: 12px; color: var(--g400); margin-top: 40px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.google-row .stars { color: #f59e0b; }
+
+/* -- SUCCESS -- */
+.success-card { background: white; border-radius: 16px; border: 1px solid var(--g200); box-shadow: var(--shadow-md); padding: 56px 48px; text-align: center; max-width: 480px; margin: 60px auto; }
+.success-icon { width: 64px; height: 64px; background: var(--green-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; color: var(--green); font-weight: 700; margin: 0 auto 20px; }
+.success-title { font-family: 'DM Sans', sans-serif; font-size: 26px; font-weight: 600; color: var(--navy); margin-bottom: 12px; }
+.success-text { font-size: 14px; color: var(--g500); line-height: 1.7; }
+.success-contact { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--g100); font-size: 13px; color: var(--g500); }
+.success-contact a { color: var(--blue); font-weight: 600; text-decoration: none; }
+
+@media (max-width: 600px) {
+  .app-header { padding: 0 16px; }
+  .main { padding: 20px 14px 60px; }
+  .card-body { padding: 16px; }
+  .card-head { padding: 14px 16px 12px; }
+  .row.r3 { grid-template-columns: 1fr 1fr; }
+  .row.r2 { grid-template-columns: 1fr 1fr; }
+  .choices.grid4 { grid-template-columns: 1fr 1fr; }
+  .choices.grid3 { grid-template-columns: 1fr 1fr; }
+  .sec-title { font-size: 22px; }
+  .loan-box-amt { font-size: 24px; }
+  .entry { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+
+<!-- HEADER -->
+<header class="app-header">
+  <a class="logo" href="#"><img src="data:image/jpeg;base64,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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEJ45JYAAAAJJ5JJJJZwAAAAAAAAAAAAAAAAAAAAAAEJ45JYAAAAJJOZJJJJAAAAAAAAAAAAAAAAAAAAAAAEJ45JYAAAAJJIhJJJBOAAAAAAAAAAAAAAAAAAAAAAEJ45JYAAAAJJIAAAAJKAAAAAAAAAAAAAAAAAAAAAAEJ45JYAAAAJJIAAAAJJAAAAAAAAAAAAAAAAAAAAAAEJ45JYAAAAJJIAAAAJJAAAAAAAAAAAAAAAAAAAAAAEJ45JYAAAAJJIAAAAJJAAAAAAAAAAAAAAAAAAAAAAEJ45JYAAAAJJIAAAAJJAAAAAAAAAAAAAAAAAAAAAAEJ45JYAAAAJJIAAAAJJAAAAAAAAAAAAAAAAAAAAAAEJ45JYAAAAJJn/wD/AP8AxPAAAAAAAAAAAAAAAAAAAAAAEJ45JYAAAAJJhJJJJJLAAAAAAAAAAAAAAAAAAAAAAEJ45JYAAAAJJP5JJJJAAAAAAAAAAAAAAAAAAAAAAAEJ45JYAAAAJJICSSSMAAAAAAAAAAAAAAAAAAAAAAAEJ45JYAAAAJJIAAAAAAAAAAAAAAAAAAAAAAAAAAAAEJohJYAAAAJJIAAAAAAAAAAAAAAAAAAAAAAADtttKEJ4pJYVttuJJIAAAAAAAAAAAAAAAAAAAAAAACJJJPkOIeJdJJJOJJIAAAAAAAAAAAAAAAAAAAAAAAB//wD/APAEAaNf/wD/APR/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQMBPxD+3YpVq5qxDGAAlgQ5MiQq74dQ9JfxiUmV1K30QckqDChCoMVMjw9BNEoHbwUijyoW+ysReaz8H1KtXNWrP79dTFXjh8MBTgQzvhtknCCaqqIYhOJC6pMkiKQ9BLMa8hQaWc34PqVauatWpjoq2v3SmLVdQUqVKlSpUkU/Sx890kEiW1kGZpsRBgoSAvxKUq1c1atSdbDgINmPzwf/AEcpVq5q1alSUq1c1atSpKVauatWpUlKtXNWrUqSlWrmrVvxGlSUq1c1ZSJXml2TGMOqhlatWrVq1atWP9rNWYAI04pS1y3fKvArPinsfgqlWrmrUEYe+otHqi0mwFnONZDKKeLHjmJFvsTST9z8FUq1c1atP5e3WruEJUg01O+i6qtXnNUrokbktjqZOXLCHNQ83+ocBQAH4OpVq5q1aU9bw2g2ohvYUhw4cOHDhzH3p1hmsQKlEPqGFXWYoCkEyzX/AIIpVq5q1ZSCyVSnkmIEZKZOdlWUVlpIIEQQmmik/wACmrVhIgykrYADbAdORIkSJEicxSc47yal8rhMmaOx5Weto/HKmeQ7ZMnpUBYGlWN0xPOKJAQCRCeiTImcsAJoSAE1cI3PyxlAaWGCmnSJEiRIkCTK5ovEUbgPt5WrQkGBEljHBysWWzSop0TnBTAgWKXsq/u3pTOoIIndgm05wWZKdhtOBDO+G2ScIjEl+K29OYBmGhfjmr5IWYZLUyKA7eAHK1YuBDO2G2ScArqV69evXr169qvTvdRcCdYRcVlxZoSMpMhmLIFEdWXKHpgAxTe0GS3OgZkaHWXTvQh8S4/S+aIznkFzC0Un4HMFGNUlSo9KaTZhYy54IiAFwdE3loE0GoZq46hevXr169eqMQDUUfCAxJAvDAm1JVGsS1NBevXt4YE2pKo1iGj/AG2v/9oACAECAwE/EP7bCru+T/EwEyi50hsVTGVJvOYQPQIiVEaianlIBBO8Jpq4TnxkE3yQ3VMZAJS4BrNwZo8RptJV3fJ/i4CZcri5onGdvOfc3NG+YAQUTE36oKiQHBGiMO5qUx4b1zVOZJ3y2iq7vk/xsBMuUpJPfd/ice53qYoXS8xdLzF0vMXS8xdLzF0vMXS8wFYogzEcEeFpNKV4zIXSotolXd8n+dgJly3TwWkE4ZJM2iq7vk/zsBMuW6eC26eLaKru+T/OwEy5bp4Lbp4toqu75P8AOwEy5bp4Lbp4toqu75P87ATLlungtuni2iq7vk/zsBMuW6eC26eLaKru+T/EwEyzalNmbNQliTo7yk8TVYYYYYYYYYEqXEwZEplrgaM80sivQdoqu75P8TATK0NuJ1peIlEaJRinyVJuDwb1bndUcJurcSbfNJfIM+cmJtFV3fJ/i4CZcvb1Abw3jv8A2SQYKUzR2vCeI4recGYaloYomTxq4cEJg8kz1FSq1Vaqu9doqu75P8bATLlLKUST4CU6iVHURRRRRRRNkS4yfj56QiCfDY4NCOp2mq7vk/iWAmXKqmlgj9JsDigf1/o/AxMuUbAEiTESIjiO80/Hjx48eBuDEyk94TCbmHMyYdz4BMBuxwRdBVObLrppZdP0LJzpGvrI/sR86Qm+NZw28klbhKObTePHjx48IsoK0kyUwMpgywmG3suWEdE3U3t1zDuTGjBR1K7jdDrvMRo2qkTgSatADFXcEGbtc53lw5CdFSxEIgZiboOCJbhCgeI75cDBmtEm8sT2Dufpt5zlyoWAJj8Yu15i7XmLteYu15i7XmLteYu15i7XmGQBWufuqOG8OYICXAtJJ0RnUSScmsmE0p828plHyIPTr4Wua6JHGaDoPhGYMfpHBGYlElAxHCFfNE06A6YRIkuU46k5nyEVPTOlJRPGElvEmgzu15i7XmLteYu15i7XmLteYu15i7XmJ2xUgWWLRh5jGqB1WLteYu15i7XmDmMaInVP7bX/2gAIAQMDAT8Q/tq3jwW9gzs79rhuBcpoGkonzcJVPDueSwmNRJHETE1L01ORlByf0F3qfCQXuBVuPNb+mJwlXZ948FvYM7O/a4bgXKaDEuUgbjIKnCbujc78HdJEZNE1SRqBExEwYIpRTee4csXJmbtnXjwW9gzs79rhuBcpoMS5Sws0xu/YzHVjj7JHskeyR7JHskeyR7JCA1EkcR4Nqi2oXUJHsh12dePBb2DOzv2uG4FymgxLlNUuTja0UuOzrx4LewZ2d+1w3AuU0GJcpqlycbbk47OvHgt7BnZ37XDcC5TQYlymqXJxtuTjs68eC3sGdnftcNwLlNBiXKapcnG25OOzrx4LewZ2d+1w3AuU0GJcpqlycbbk47OvHgt7BnZ37XDcC5TQYlymqXJxtuTjs68eC3sGdnftcNwLlNBJargJDKhng7zjuwY99D30PfQ99D30PfQ99D30PfQExRA4k21zmCLlIucjq7OvHgt7BnZ37XDcC5TQH8DI9P0TEcRrE851XGODyb/3v1hBSD9qr8glyJ4Ozrx4LewZ2d+1w3AuU0GJcpAGZ/sHcjuT/GkyGFVV3A4nPibnlJdSpAqip8OJxNF3YzARgSQGAGAbOvHgt7BnZ37XDcC5TQYlylhebKcxMVxPJg6gAAAAAAAzN51HlDodPMfE6HwG0Lx4LewZ2d+1w3AuU0GJcpttePBbztL9pYWbunu/WuNwLlNBiXKbRMmhcSiIpI8dPFixYsWISoQyUckWSO+B1CQb5eR3PkbLx4LUkE/jVRPrIfNiSmbg/Y7i6Rs446qSjcisnEf0x0sWLFixYgtRpCTlzkrWrXnGBcpoMS5TaK9eLUMjRibhvHk9mpWECxoN+8Hw7ypF48FgAFTIDFeBDOeC8jd8MXnSshsQSTUYcEqzXDn5m7iVxnK039QB3Lm+OOpxYFymgxLlNogplVzUXY8RdjxF2PEXY8RdjxF2PEXY8RdjxBZtUoA/VE3O7ooqlE+aZRRJYjTKECavJfpq+BhcfnCnQ3dWvCU00AwEqN6PBKmJDAXEgHIWj8yeuMTcb4PhlJ+IlcVKKhpjLEOO4wrKV2PEXY8RdjxF2PEXY8RdjxF2PEXY8Rj44In74BIwAFcOCLseIux4i7HiESMARHDi/ttf/9k=" alt="JLP Financial" style="height:38px;width:auto;display:block"></a>
+  <div style="display:flex;align-items:center;gap:20px">
+    <div class="autosave" id="autosave">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20,6 9,17 4,12"/></svg>
+      Draft saved
+    </div>
+    <div class="header-right">Help: <a href="tel:0433773021">0433 773 021</a></div>
+  </div>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-inner" id="progressBar">
+    <div class="prog-step active" data-step="1" onclick="jumpStep(1)"><div class="prog-num">1</div><div class="prog-label">Purpose</div></div>
+    <div class="prog-step inactive" data-step="2" onclick="jumpStep(2)"><div class="prog-num">2</div><div class="prog-label">Asset & Loan</div></div>
+    <div class="prog-step inactive" data-step="3" onclick="jumpStep(3)"><div class="prog-num">3</div><div class="prog-label">Applicants & Personal</div></div>
+    <div class="prog-step inactive" data-step="4" id="progEmployment" onclick="jumpStep(4)"><div class="prog-num">4</div><div class="prog-label" id="progEmpLabel">Employment</div></div>
+    <div class="prog-step inactive" data-step="5" onclick="jumpStep(5)"><div class="prog-num">5</div><div class="prog-label">Finances</div></div>
+    <div class="prog-step inactive" data-step="6" onclick="jumpStep(6)"><div class="prog-num">6</div><div class="prog-label">Documents</div></div>
+    <div class="prog-step inactive" data-step="7" onclick="jumpStep(7)"><div class="prog-num">7</div><div class="prog-label">Submit</div></div>
+  </div>
+</div>
+
+<div class="main" id="mainContent">
+
+<!-- ==== STEP 1 – PURPOSE ==== -->
+<div class="section active" id="step-1">
+  <div class="sec-header">
+    <div class="sec-eye">Step 1 of 7</div>
+    <div class="sec-title">What are you applying for?</div>
+    <div class="sec-desc">Select the loan type that best matches your needs.</div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-title">Loan Purpose</div></div>
+    <div class="card-body">
+      <div class="choices grid2">
+        <div class="ch large sel" id="p-personal" onclick="selectPurpose('personal')"><div class="ch-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>Personal</div>
+        <div class="ch large" id="p-business" onclick="selectPurpose('business')"><div class="ch-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>Business</div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-row"><div></div><button class="btn btn-primary" onclick="next()">Continue →</button></div>
+</div>
+
+<!-- ==== STEP 2 – ASSET & LOAN ==== -->
+<div class="section" id="step-2">
+  <div class="sec-header">
+    <div class="sec-eye">Step 2 of 7</div>
+    <div class="sec-title">Asset & Loan Details</div>
+    <div class="sec-desc">What are you financing and how much do you need?</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-title">Type of Finance</div></div>
+    <div class="card-body">
+      <!-- Personal finance types -->
+      <div id="personalTypes">
+        <div class="choices grid4" id="finTypeChoices">
+          <div class="ch" onclick="selectFinType(this,'Vehicle')"><div class="ch-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h13l4 4v4a2 2 0 0 1-2 2h-1"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M3 9h13"/></svg></div>Vehicle</div>
+          <div class="ch" onclick="selectFinType(this,'Refinance')"><div class="ch-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="23,4 23,10 17,10"/><polyline points="1,20 1,14 7,14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div>Refinance</div>
+          <div class="ch" onclick="selectFinType(this,'Personal Loan')"><div class="ch-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>Personal Loan</div>
+          <div class="ch" onclick="selectFinType(this,'Motorcycle')"><div class="ch-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6h-5l-3 8h10"/><path d="M15 6l2 5"/><path d="M10 6V4h3"/></svg></div>Motorcycle</div>
+          <div class="ch" onclick="selectFinType(this,'Marine')"><div class="ch-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5H2v5z"/><path d="M22 15l-2-7H4L2 15"/><path d="M12 3v5"/><path d="M9 6l3-3 3 3"/></svg></div>Marine</div>
+          <div class="ch" onclick="selectFinType(this,'Debt Consolidation')"><div class="ch-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div>Debt Consolidation</div>
+          <div class="ch" onclick="selectFinType(this,'Caravan')"><div class="ch-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="14" height="12" rx="2"/><path d="M15 9h4l3 4v3h-7"/><circle cx="5" cy="18" r="2"/><circle cx="18" cy="18" r="2"/><line x1="7" y1="6" x2="7" y2="18"/></svg></div>Caravan</div>
+          <div class="ch" onclick="selectFinType(this,'Other')"><div class="ch-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>Other</div>
+        </div>
+      </div>
+      <!-- Business finance types -->
+      <div id="businessTypes" style="display:none">
+        <div class="choices grid4" id="bizTypeChoices">
+          <div class="ch" onclick="selectFinType(this,'Vehicle')"><div class="ch-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h13l4 4v4a2 2 0 0 1-2 2h-1"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M3 9h13"/></svg></div>Vehicle</div>
+          <div class="ch" onclick="selectFinType(this,'Truck')"><div class="ch-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>Truck</div>
+          <div class="ch" onclick="selectFinType(this,'Business Loan')"><div class="ch-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>Business Loan</div>
+          <div class="ch" onclick="selectFinType(this,'Equipment')"><div class="ch-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>Equipment</div>
+          <div class="ch" onclick="selectFinType(this,'Fleet')"><div class="ch-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h13l4 4v4a2 2 0 0 1-2 2h-1"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M9 7V3"/><path d="M14 7V3"/></svg></div>Fleet</div>
+          <div class="ch" onclick="selectFinType(this,'Refinance')"><div class="ch-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="23,4 23,10 17,10"/><polyline points="1,20 1,14 7,14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div>Refinance</div>
+          <div class="ch" onclick="selectFinType(this,'Working Capital')"><div class="ch-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>Working Capital</div>
+          <div class="ch" onclick="selectFinType(this,'Other')"><div class="ch-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>Other</div>
+        </div>
+      </div>
+      <div class="alert alert-err" id="noTypeAlert" style="display:none;margin-top:12px"><div>Please select a type of finance to continue.</div></div>
+
+      <!-- Asset fields (vehicle-type) -->
+      <div id="assetFields" class="cond" style="margin-top:16px">
+        <hr>
+        <div class="fld" style="margin-bottom:14px">
+          <label class="lbl">Purchasing From <span class="opt">(optional)</span></label>
+          <div class="choices" id="purchaseFromChoices" style="margin-top:4px">
+            <div class="ch inline" onclick="selectCh(this,'purchaseFrom')">Private Seller</div>
+            <div class="ch inline" onclick="selectCh(this,'purchaseFrom')">Dealer</div>
+            <div class="ch inline" onclick="selectCh(this,'purchaseFrom')">Unsure</div>
+          </div>
+        </div>
+        <div class="row r2">
+          <div class="fld"><label class="lbl">Make <span class="opt">(optional)</span></label><input type="text" id="fMake" placeholder="e.g. Toyota"></div>
+          <div class="fld"><label class="lbl">Model <span class="opt">(optional)</span></label><input type="text" id="fModel" placeholder="e.g. Hilux"></div>
+        </div>
+        <div class="row r2">
+          <div class="fld"><label class="lbl">Year <span class="opt">(optional)</span></label><input type="number" id="fYear" placeholder="e.g. 2024"></div>
+          <div class="fld">
+            <label class="lbl">Condition <span class="opt">(optional)</span></label>
+            <div class="choices" id="condChoices">
+              <div class="ch inline" onclick="selectCh(this,'cond')">New</div>
+              <div class="ch inline" onclick="selectCh(this,'cond')">Demo</div>
+              <div class="ch inline" onclick="selectCh(this,'cond')">Used</div>
+            </div>
+          </div>
+        </div>
+        <div class="row r2">
+          <div class="fld"><label class="lbl">Rego Number <span class="opt">(optional)</span></label><input type="text" id="fRego" placeholder="Registration number"></div>
+          <div class="fld"><label class="lbl">VIN Number <span class="opt">(optional)</span></label><input type="text" id="fVin" placeholder="Vehicle identification number"></div>
+        </div>
+      </div>
+
+      <!-- Description field (non-vehicle types) -->
+      <div id="descField" class="cond" style="margin-top:16px">
+        <hr>
+        <div class="fld">
+          <label class="lbl" id="descLabel">What is it for?</label>
+          <input type="text" id="fDesc" placeholder="Describe the purpose of the loan">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-title">Loan Details</div></div>
+    <div class="card-body">
+      <!-- Non-asset direct amount -->
+      <div id="directAmtSection" class="cond">
+        <div class="fld" style="margin-bottom:14px">
+          <label class="lbl">Loan Amount <span class="req">*</span></label>
+          <div class="pre"><span class="pre-sym">$</span><input type="number" id="fDirectAmt" placeholder="Min $5,000" value="20000" min="5000" oninput="calcLoan()"></div>
+          <div class="err-msg" id="directAmtErr">Minimum loan amount is $5,000</div>
+        </div>
+      </div>
+      <!-- Asset price + deposit -->
+      <div id="assetAmtSection">
+        <div class="row r2" style="margin-bottom:0">
+          <div class="fld"><label class="lbl">Asset Price <span class="req">*</span></label><div class="pre"><span class="pre-sym">$</span><input type="number" id="fAssetPrice" placeholder="0" oninput="calcLoan()"></div></div>
+          <div class="fld"><label class="lbl">Deposit</label><div class="pre"><span class="pre-sym">$</span><input type="number" id="fDeposit" placeholder="0" oninput="calcLoan()"></div></div>
+        </div>
+      </div>
+
+      <div class="loan-box"><div><div class="loan-box-lbl">Estimated Loan Amount</div></div><div class="loan-box-amt" id="loanAmtDisplay">$0</div></div>
+      <div class="err-msg" id="loanMinErr">Minimum loan amount is $5,000</div>
+
+      <div class="row r2">
+        <div class="fld">
+          <label class="lbl">Loan Duration</label>
+          <select id="fLoanDur" onchange="checkBalloon()">
+            <option value="1">1 Year</option><option value="2">2 Years</option><option value="3">3 Years</option>
+            <option value="4">4 Years</option><option value="5" selected>5 Years</option>
+            <option value="6">6 Years</option><option value="7">7 Years</option>
+          </select>
+        </div>
+        <div class="fld" id="balloonFld">
+          <label class="lbl">Balloon Payment (%)</label>
+          <select id="fBalloon">
+            <option>0%</option><option>10%</option><option>20%</option><option>30%</option><option>40%</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="prev()">← Back</button>
+    <button class="btn btn-primary" onclick="next()">Continue →</button>
+  </div>
+</div>
+
+<!-- ==== STEP 3 – APPLICANTS & PERSONAL ==== -->
+<div class="section" id="step-3">
+  <div class="sec-header">
+    <div class="sec-eye">Step 3 of 7</div>
+    <div class="sec-title">Applicants & Personal Details</div>
+    <div class="sec-desc">Who's applying, and your identity and residential information.</div>
+  </div>
+
+  <!-- Applicant selector -->
+  <div class="card">
+    <div class="card-head"><div class="card-title">Applicants</div></div>
+    <div class="card-body">
+      <div class="choices grid2" id="applicantChoices">
+        <div class="ch large sel" onclick="selectApplicant('solo',this)">Me Only</div>
+        <div class="ch large" onclick="selectApplicant('co',this)">Add Co-Borrower</div>
+      </div>
+      <div class="alert alert-info" id="coInfo" style="display:none;margin-top:12px">
+        
+        <div><strong>Note</strong> A co-borrower must be in a relationship with the primary applicant (e.g. spouse or de facto partner).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICANT 1 PERSONAL -->
+  <div class="card">
+    <div class="card-head"><div class="card-title">Applicant 1 – Identity</div></div>
+    <div class="card-body">
+      <div class="row r3">
+        <div class="fld"><label class="lbl">First Name <span class="req">*</span></label><input type="text" id="a1FirstName" placeholder="First name"></div>
+        <div class="fld"><label class="lbl">Middle Name <span class="opt">(optional)</span></label><input type="text" id="a1MiddleName" placeholder="Middle name"></div>
+        <div class="fld"><label class="lbl">Last Name <span class="req">*</span></label><input type="text" id="a1LastName" placeholder="Last name"></div>
+      </div>
+      <div class="row r2">
+        <div class="fld"><label class="lbl">Mobile <span class="req">*</span></label><input type="tel" id="a1Mobile" placeholder="04XX XXX XXX"></div>
+        <div class="fld"><label class="lbl">Email <span class="req">*</span></label><input type="email" id="a1Email" placeholder="you@example.com"></div>
+      </div>
+      <hr>
+      <div class="fld" style="margin-bottom:14px">
+        <label class="lbl">Title <span class="req">*</span></label>
+        <div class="choices" id="a1TitleChoices">
+          <div class="ch inline" onclick="selectCh(this,'a1Title')">Mr</div><div class="ch inline" onclick="selectCh(this,'a1Title')">Mrs</div>
+          <div class="ch inline" onclick="selectCh(this,'a1Title')">Miss</div><div class="ch inline" onclick="selectCh(this,'a1Title')">Ms</div>
+          <div class="ch inline" onclick="selectCh(this,'a1Title')">Dr</div><div class="ch inline" onclick="selectCh(this,'a1Title')">Other</div>
+        </div>
+      </div>
+      <div class="fld" style="margin-bottom:14px">
+        <label class="lbl">Marital Status <span class="req">*</span></label>
+        <div class="choices" id="a1MaritalChoices">
+          <div class="ch inline" onclick="selectCh(this,'a1Marital')">Married</div><div class="ch inline" onclick="selectCh(this,'a1Marital')">Defacto</div>
+          <div class="ch inline" onclick="selectCh(this,'a1Marital')">Single</div><div class="ch inline" onclick="selectCh(this,'a1Marital')">Divorced</div>
+          <div class="ch inline" onclick="selectCh(this,'a1Marital')">Widowed</div>
+        </div>
+      </div>
+      <div class="row r2">
+        <div class="fld"><label class="lbl">Date of Birth <span class="req">*</span></label><input type="date" id="a1DOB"><div class="err-msg" id="a1DOBErr">Date of birth is required</div></div>
+        <div class="fld"><label class="lbl">Dependents</label><input type="number" id="a1Deps" value="0" min="0" max="20"></div>
+      </div>
+      <hr>
+      <div class="fld" style="margin-bottom:14px">
+        <label class="lbl">Residential Status <span class="req">*</span></label>
+        <div class="choices grid4" id="a1ResChoices">
+          <div class="ch" onclick="selectResidency(this,'a1')">Australian Citizen</div>
+          <div class="ch" onclick="selectResidency(this,'a1')">Permanent Resident</div>
+          <div class="ch" onclick="selectResidency(this,'a1')">New Zealand Citizen</div>
+          <div class="ch" onclick="selectResidency(this,'a1')">Visa</div>
+        </div>
+      </div>
+      <div id="a1VisaFields" class="cond">
+        <div class="row r2">
+          <div class="fld"><label class="lbl">Visa Number <span class="opt">(optional)</span></label><input type="text" id="a1VisaNo" placeholder="Visa number"></div>
+          <div class="fld"><label class="lbl">Visa Expiry <span class="opt">(optional)</span></label><input type="date" id="a1VisaExp"></div>
+        </div>
+      </div>
+      <hr>
+      <!-- Licence -->
+      <div id="a1LicFields">
+        <div class="row r3">
+          <div class="fld"><label class="lbl">Licence No. <span class="req">*</span></label><input type="text" id="a1LicNo" placeholder="Licence number"><div class="err-msg" id="a1LicNoErr">Licence number is required</div></div>
+          <div class="fld"><label class="lbl">Licence Expiry <span class="req">*</span></label><input type="date" id="a1LicExp"></div>
+          <div class="fld"><label class="lbl">Card No. <span class="req">*</span></label><input type="text" id="a1LicCard" placeholder="Card number"></div>
+        </div>
+      </div>
+      <label class="toggle-row" id="a1NoLicRow" onclick="togglePassport('a1')">
+        <input type="checkbox" id="a1NoLic">
+        <div class="custom-cb" id="a1CbBox">
+          <svg width="11" height="9" viewBox="0 0 11 9" fill="none" id="a1CbCheck" style="display:none"><path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="toggle-text">I don't have an Australian driver's licence</span>
+      </label>
+      <div id="a1PassportSection" class="cond">
+        <div class="sub-head">Passport Details</div>
+        <div class="row r2">
+          <div class="fld"><label class="lbl">Passport No. <span class="req">*</span></label><input type="text" id="a1PassNo" placeholder="Passport number"><div class="err-msg" id="a1PassNoErr">Required</div></div>
+          <div class="fld"><label class="lbl">Expiry <span class="req">*</span></label><input type="date" id="a1PassExp"></div>
+        </div>
+        <div class="fld" style="margin-bottom:14px"><label class="lbl">Country of Issue <span class="req">*</span></label><input type="text" id="a1PassCountry" placeholder="e.g. Australia"></div>
+      </div>
+      <hr>
+      <!-- Living Situation -->
+      <div class="fld" style="margin-bottom:14px">
+        <label class="lbl">Living Situation <span class="req">*</span></label>
+        <div class="choices" id="a1LivingChoices">
+          <div class="ch inline" onclick="selectCh(this,'a1Living')">Own Home Outright</div>
+          <div class="ch inline" onclick="selectCh(this,'a1Living')">Own Home with Mortgage</div>
+          <div class="ch inline" onclick="selectCh(this,'a1Living')">Renting</div>
+          <div class="ch inline" onclick="selectCh(this,'a1Living')">Boarding</div>
+          <div class="ch inline" onclick="selectCh(this,'a1Living')">Living with Parents</div>
+        </div>
+      </div>
+      <hr>
+      <!-- Address -->
+      <div class="sub-head">Current Address</div>
+      <div class="fld" style="margin-bottom:14px"><label class="lbl">Street Address <span class="req">*</span></label><input type="text" id="a1Street" placeholder="123 Main Street"><div class="err-msg" id="a1StreetErr">Street address is required</div></div>
+      <div class="row r3">
+        <div class="fld"><label class="lbl">Suburb <span class="req">*</span></label><input type="text" id="a1Suburb" placeholder="Suburb"><div class="err-msg" id="a1SuburbErr">Required</div></div>
+        <div class="fld"><label class="lbl">State <span class="req">*</span></label><select id="a1State"><option value="">Select state</option><option>NSW</option><option>VIC</option><option>QLD</option><option>WA</option><option>SA</option><option>TAS</option><option>ACT</option><option>NT</option></select><div class="err-msg" id="a1StateErr">Required</div></div>
+        <div class="fld"><label class="lbl">Postcode <span class="req">*</span></label><input type="text" id="a1Post" placeholder="2000" maxlength="4"><div class="err-msg" id="a1PostErr">Required</div></div>
+      </div>
+      <div class="row r2">
+        <div class="fld"><label class="lbl">Years at Address <span class="req">*</span></label><input type="number" id="a1AddrYrs" placeholder="Years" min="0" oninput="checkPrevAddr('a1')"></div>
+        <div class="fld"><label class="lbl">Months <span class="req">*</span></label><input type="number" id="a1AddrMos" placeholder="Months" min="0" max="11"></div>
+      </div>
+      <!-- Previous Address (if < 3 years) -->
+      <div id="a1PrevAddrSection" class="cond">
+        <div class="sub-head" style="margin-top:16px">Previous Address</div>
+        <div class="fld" style="margin-bottom:14px"><label class="lbl">Street Address <span class="req">*</span></label><input type="text" id="a1PrevStreet" placeholder="123 Previous Street"><div class="err-msg" id="a1PrevStreetErr">Required</div></div>
+        <div class="row r3">
+          <div class="fld"><label class="lbl">Suburb <span class="req">*</span></label><input type="text" id="a1PrevSuburb" placeholder="Suburb"><div class="err-msg" id="a1PrevSuburbErr">Required</div></div>
+          <div class="fld"><label class="lbl">State <span class="req">*</span></label><select id="a1PrevState"><option value="">Select</option><option>NSW</option><option>VIC</option><option>QLD</option><option>WA</option><option>SA</option><option>TAS</option><option>ACT</option><option>NT</option></select><div class="err-msg" id="a1PrevStateErr">Required</div></div>
+          <div class="fld"><label class="lbl">Postcode <span class="req">*</span></label><input type="text" id="a1PrevPost" placeholder="2000" maxlength="4"><div class="err-msg" id="a1PrevPostErr">Required</div></div>
+        </div>
+        <div class="row r2">
+          <div class="fld"><label class="lbl">Years at Address</label><input type="number" id="a1PrevYrs" placeholder="Years" min="0"></div>
+          <div class="fld"><label class="lbl">Months</label><input type="number" id="a1PrevMos" placeholder="Months" min="0" max="11"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICANT 2 PERSONAL (co-borrower) -->
+  <div id="a2PersonalCard" class="card" style="display:none">
+    <div class="card-head"><div class="card-title">Applicant 2 – Identity</div></div>
+    <div class="card-body">
+      <div class="row r3">
+        <div class="fld"><label class="lbl">First Name <span class="req">*</span></label><input type="text" id="a2FirstName" placeholder="First name"></div>
+        <div class="fld"><label class="lbl">Middle Name <span class="opt">(optional)</span></label><input type="text" placeholder="Middle name"></div>
+        <div class="fld"><label class="lbl">Last Name <span class="req">*</span></label><input type="text" id="a2LastName" placeholder="Last name"></div>
+      </div>
+      <div class="row r2">
+        <div class="fld"><label class="lbl">Mobile <span class="req">*</span></label><input type="tel" id="a2Mobile" placeholder="04XX XXX XXX"></div>
+        <div class="fld"><label class="lbl">Email <span class="req">*</span></label><input type="email" id="a2Email" placeholder="you@example.com"></div>
+      </div>
+      <hr>
+      <div class="fld" style="margin-bottom:14px">
+        <label class="lbl">Title <span class="req">*</span></label>
+        <div class="choices" id="a2TitleChoices">
+          <div class="ch inline" onclick="selectCh(this,'a2Title')">Mr</div><div class="ch inline" onclick="selectCh(this,'a2Title')">Mrs</div>
+          <div class="ch inline" onclick="selectCh(this,'a2Title')">Miss</div><div class="ch inline" onclick="selectCh(this,'a2Title')">Ms</div>
+          <div class="ch inline" onclick="selectCh(this,'a2Title')">Dr</div><div class="ch inline" onclick="selectCh(this,'a2Title')">Other</div>
+        </div>
+      </div>
+      <div class="row r2">
+        <div class="fld"><label class="lbl">Date of Birth <span class="req">*</span></label><input type="date" id="a2DOB"></div>
+        <div class="fld"><label class="lbl">Dependents</label><input type="number" id="a2Deps" value="0" min="0" max="20"></div>
+      </div>
+      <hr>
+      <div class="fld" style="margin-bottom:14px">
+        <label class="lbl">Residential Status <span class="req">*</span></label>
+        <div class="choices grid4" id="a2ResChoices">
+          <div class="ch" onclick="selectResidency(this,'a2')">Australian Citizen</div>
+          <div class="ch" onclick="selectResidency(this,'a2')">Permanent Resident</div>
+          <div class="ch" onclick="selectResidency(this,'a2')">New Zealand Citizen</div>
+          <div class="ch" onclick="selectResidency(this,'a2')">Visa</div>
+        </div>
+      </div>
+      <div id="a2VisaFields" class="cond">
+        <div class="row r2">
+          <div class="fld"><label class="lbl">Visa Number</label><input type="text" placeholder="Visa number"></div>
+          <div class="fld"><label class="lbl">Visa Expiry</label><input type="date"></div>
+        </div>
+      </div>
+      <hr>
+      <div class="row r2">
+        <div class="fld"><label class="lbl">Licence No. <span class="req">*</span></label><input type="text" placeholder="Licence number"></div>
+        <div class="fld"><label class="lbl">Licence Expiry</label><input type="date"></div>
+      </div>
+      <label class="toggle-row" id="a2NoLicRow" onclick="togglePassport('a2')">
+        <input type="checkbox" id="a2NoLic">
+        <div class="custom-cb" id="a2CbBox">
+          <svg width="11" height="9" viewBox="0 0 11 9" fill="none" id="a2CbCheck" style="display:none"><path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="toggle-text">I don't have an Australian driver's licence</span>
+      </label>
+      <div id="a2PassportSection" class="cond">
+        <div class="sub-head">Passport Details</div>
+        <div class="row r2">
+          <div class="fld"><label class="lbl">Passport No. <span class="req">*</span></label><input type="text" placeholder="Passport number"></div>
+          <div class="fld"><label class="lbl">Expiry <span class="req">*</span></label><input type="date"></div>
+        </div>
+        <div class="fld" style="margin-bottom:14px"><label class="lbl">Country of Issue <span class="req">*</span></label><input type="text" placeholder="e.g. Australia"></div>
+      </div>
+      <hr>
+      <div class="fld" style="margin-bottom:14px">
+        <label class="lbl">Living Situation <span class="req">*</span></label>
+        <div class="choices" id="a2LivingChoices">
+          <div class="ch inline" onclick="selectCh(this,'a2Living')">Own Home Outright</div>
+          <div class="ch inline" onclick="selectCh(this,'a2Living')">Own Home with Mortgage</div>
+          <div class="ch inline" onclick="selectCh(this,'a2Living')">Renting</div>
+          <div class="ch inline" onclick="selectCh(this,'a2Living')">Boarding</div>
+          <div class="ch inline" onclick="selectCh(this,'a2Living')">Living with Parents</div>
+        </div>
+      </div>
+      <hr>
+      <div class="sub-head">Current Address</div>
+      <div class="fld" style="margin-bottom:14px"><label class="lbl">Street Address <span class="req">*</span></label><input type="text" placeholder="123 Main Street"></div>
+      <div class="row r3">
+        <div class="fld"><label class="lbl">Suburb <span class="req">*</span></label><input type="text" placeholder="Suburb"></div>
+        <div class="fld"><label class="lbl">State <span class="req">*</span></label><select><option value="">Select state</option><option>NSW</option><option>VIC</option><option>QLD</option><option>WA</option><option>SA</option><option>TAS</option><option>ACT</option><option>NT</option></select></div>
+        <div class="fld"><label class="lbl">Postcode <span class="req">*</span></label><input type="text" placeholder="2000" maxlength="4"></div>
+      </div>
+      <div class="row r2">
+        <div class="fld"><label class="lbl">Years at Address</label><input type="number" placeholder="Years" min="0" oninput="checkPrevAddr('a2')"></div>
+        <div class="fld"><label class="lbl">Months</label><input type="number" placeholder="Months" min="0" max="11"></div>
+      </div>
+      <div id="a2PrevAddrSection" class="cond">
+        <div class="sub-head" style="margin-top:16px">Previous Address</div>
+        <div class="fld" style="margin-bottom:14px"><label class="lbl">Street Address</label><input type="text" placeholder="123 Previous Street"></div>
+        <div class="row r3">
+          <div class="fld"><label class="lbl">Suburb</label><input type="text" placeholder="Suburb"></div>
+          <div class="fld"><label class="lbl">State</label><select><option value="">Select</option><option>NSW</option><option>VIC</option><option>QLD</option><option>WA</option><option>SA</option><option>TAS</option><option>ACT</option><option>NT</option></select></div>
+          <div class="fld"><label class="lbl">Postcode</label><input type="text" placeholder="2000" maxlength="4"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="prev()">← Back</button>
+    <button class="btn btn-primary" onclick="next()">Continue →</button>
+  </div>
+</div>
+
+<!-- ==== STEP 4 – EMPLOYMENT ==== -->
+<div class="section" id="step-4">
+  <div class="sec-header">
+    <div class="sec-eye">Step 4 of 7</div>
+    <div class="sec-title">Employment & Income</div>
+    <div class="sec-desc">Details about your current employment and earnings.</div>
+  </div>
+
+  <!-- BUSINESS DETAILS (shown when purpose = business) -->
+  <div id="bizDetailsCard" class="card" style="display:none">
+    <div class="card-head"><div class="card-title">Business Details</div></div>
+    <div class="card-body">
+      <div class="row r2">
+        <div class="fld"><label class="lbl">ABN Number <span class="req">*</span></label><input type="text" id="bizABN" placeholder="12 345 678 901"></div>
+        <div class="fld"><label class="lbl">Company Name</label><input type="text" id="bizName" placeholder="Registered business name"></div>
+      </div>
+      <div class="row r2">
+        <div class="fld"><label class="lbl">Industry <span class="req">*</span></label><input type="text" id="bizIndustry" placeholder="e.g. Construction, Retail"></div>
+        <div class="fld"><label class="lbl">ABN Duration</label><input type="text" id="bizABNDur" placeholder="e.g. 5 years"></div>
+      </div>
+      <div class="fld" style="margin-bottom:14px">
+        <label class="lbl">Entity Type</label>
+        <div class="choices grid4" id="bizEntityChoices">
+          <div class="ch" onclick="selectBizEntity(this,'Company')">Company</div>
+          <div class="ch" onclick="selectBizEntity(this,'Sole Trader')">Sole Trader</div>
+          <div class="ch" onclick="selectBizEntity(this,'Partnership')">Partnership</div>
+          <div class="ch" onclick="selectBizEntity(this,'Trust')">Trust</div>
+        </div>
+      </div>
+      <!-- Company director fields -->
+      <div id="bizCompanyFields" class="cond">
+        <div class="fld" style="margin-bottom:14px">
+          <label class="lbl">Are you the sole director?</label>
+          <div class="choices" id="bizSoleDirChoices">
+            <div class="ch inline" onclick="selectCh(this,'bizSoleDir');checkDirectors()">Yes</div>
+            <div class="ch inline" onclick="selectCh(this,'bizSoleDir');checkDirectors()">No</div>
+          </div>
+        </div>
+        <div id="bizDirCountField" class="cond">
+          <div class="fld" style="margin-bottom:14px"><label class="lbl">How many directors?</label><input type="number" id="bizDirCount" min="2" max="10" placeholder="Number of directors"></div>
+        </div>
+      </div>
+      <div class="switch-row" style="margin-bottom:10px">
+        <span class="switch-lbl">GST Registered</span>
+        <label class="switch"><input type="checkbox" id="bizGST" onchange="toggleEl('bizGSTField',this.checked)"><span class="slider"></span></label>
+      </div>
+      <div id="bizGSTField" class="cond" style="margin-bottom:14px">
+        <div class="fld"><label class="lbl">GST Registration Duration</label><input type="text" id="bizGSTDur" placeholder="e.g. 3 years"></div>
+      </div>
+      <div class="row r2">
+        <div class="fld"><label class="lbl">Monthly Revenue ($) <span class="req">*</span></label><div class="pre"><span class="pre-sym">$</span><input type="number" id="bizRevenue" placeholder="0"></div></div>
+        <div class="fld"><label class="lbl">Monthly Expenses ($)</label><div class="pre"><span class="pre-sym">$</span><input type="number" id="bizExpenses" placeholder="0"></div></div>
+      </div>
+      <hr>
+      <div class="sub-head">Company Address</div>
+      <div class="fld" style="margin-bottom:14px"><label class="lbl">Street Address <span class="req">*</span></label><input type="text" id="bizStreet" placeholder="123 Business Street"></div>
+      <div class="row r3">
+        <div class="fld"><label class="lbl">Suburb <span class="req">*</span></label><input type="text" id="bizSuburb" placeholder="Suburb"></div>
+        <div class="fld"><label class="lbl">State <span class="req">*</span></label><select id="bizState"><option value="">Select state</option><option>NSW</option><option>VIC</option><option>QLD</option><option>WA</option><option>SA</option><option>TAS</option><option>ACT</option><option>NT</option></select></div>
+        <div class="fld"><label class="lbl">Postcode <span class="req">*</span></label><input type="text" id="bizPost" placeholder="2000" maxlength="4"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMPLOYMENT APPLICANT 1 (personal only) -->
+  <div class="card" id="a1EmpCard">
+    <div class="card-head"><div class="card-title">Applicant 1 – Employment</div></div>
+    <div class="card-body">
+      <div class="fld" style="margin-bottom:14px">
+        <label class="lbl">Employment Status <span class="req">*</span></label>
+        <div class="choices" id="a1EmpChoices">
+          <div class="ch inline" onclick="selectEmployment(this,'a1')">Full Time</div>
+          <div class="ch inline" onclick="selectEmployment(this,'a1')">Part Time</div>
+          <div class="ch inline" onclick="selectEmployment(this,'a1')">Casual</div>
+          <div class="ch inline" onclick="selectEmployment(this,'a1')">Self-Employed</div>
+          <div class="ch inline" onclick="selectEmployment(this,'a1')">Centrelink</div>
+          <div class="ch inline" onclick="selectEmployment(this,'a1')">Unemployed</div>
+        </div>
+      </div>
+      <div id="a1UnemployedAlert" class="alert alert-err" style="display:none">
+        <div><strong>We're unable to assist</strong>We require applicants to have a current source of income.</div>
+      </div>
+      <div id="a1EmpDetails" class="cond">
+        <div id="a1SelfEmpField" class="cond">
+          <div class="fld" style="margin-bottom:14px"><label class="lbl">ABN Number <span class="req">*</span></label><input type="text" id="a1ABN" placeholder="ABN number"></div>
+        </div>
+        <div id="a1EmployerFields" class="cond">
+          <div class="row r2">
+            <div class="fld"><label class="lbl">Employer Name <span class="req">*</span></label><input type="text" id="a1EmpName" placeholder="Company name"><div class="err-msg" id="a1EmpNameErr">Required</div></div>
+            <div class="fld"><label class="lbl">Employer Phone</label><input type="tel" id="a1EmpPhone" placeholder="02 XXXX XXXX"></div>
+          </div>
+        </div>
+        <div id="a1OccField" class="cond">
+          <div class="fld" style="margin-bottom:14px"><label class="lbl">Occupation <span class="req">*</span></label><input type="text" id="a1Occ" placeholder="e.g. Accountant"><div class="err-msg" id="a1OccErr">Required</div></div>
+        </div>
+        <div class="row r2">
+          <div class="fld"><label class="lbl">Years with Employer <span class="req">*</span></label><input type="number" id="a1EmpYrs" placeholder="Years" min="0" oninput="checkPrevEmp('a1')"></div>
+          <div class="fld"><label class="lbl">Months <span class="req">*</span></label><input type="number" id="a1EmpMos" placeholder="Months" min="0" max="11"></div>
+        </div>
+        <div class="fld" style="margin-bottom:14px">
+          <label class="lbl">Income <span class="req">*</span></label>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
+            <div>
+              <div class="lbl" style="font-size:11px;color:var(--g400);margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px">Tax Type</div>
+              <div class="choices" id="a1TaxChoices" style="gap:5px">
+                <div class="ch inline sel" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1TaxChoices')">Before Tax</div>
+                <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1TaxChoices')">After Tax</div>
+              </div>
+            </div>
+            <div>
+              <div class="lbl" style="font-size:11px;color:var(--g400);margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px">Pay Frequency</div>
+              <div class="choices" id="a1FreqChoices" style="gap:5px">
+                <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1FreqChoices')">Weekly</div>
+                <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1FreqChoices')">Fortnightly</div>
+                <div class="ch inline sel" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1FreqChoices')">Monthly</div>
+                <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1FreqChoices')">Annually</div>
+              </div>
+            </div>
+            <div>
+              <div class="lbl" style="font-size:11px;color:var(--g400);margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px">Amount</div>
+              <div class="pre" style="max-width:220px"><span class="pre-sym">$</span><input type="number" id="a1Income" placeholder="0"></div>
+            </div>
+          </div>
+          <div class="err-msg" id="a1IncomeErr">Required</div>
+        </div>
+        <!-- Previous employment (< 3 years) -->
+        <div id="a1PrevEmpSection" class="cond">
+          <hr>
+          <div class="sub-head"> Previous Employment</div>
+          <div class="fld" style="margin-bottom:14px">
+            <label class="lbl">Employment Status</label>
+            <div class="choices" id="a1PrevEmpChoices">
+              <div class="ch inline" onclick="selectCh(this,'a1PrevEmp')">Full Time</div>
+              <div class="ch inline" onclick="selectCh(this,'a1PrevEmp')">Part Time</div>
+              <div class="ch inline" onclick="selectCh(this,'a1PrevEmp')">Casual</div>
+              <div class="ch inline" onclick="selectCh(this,'a1PrevEmp')">Self-Employed</div>
+            </div>
+          </div>
+          <div class="row r2">
+            <div class="fld"><label class="lbl">Previous Employer</label><input type="text" placeholder="Company name"></div>
+            <div class="fld"><label class="lbl">Occupation</label><input type="text" placeholder="e.g. Accountant"></div>
+          </div>
+          <div class="row r2">
+            <div class="fld"><label class="lbl">Years</label><input type="number" placeholder="Years" min="0"></div>
+            <div class="fld"><label class="lbl">Months</label><input type="number" placeholder="Months" min="0" max="11"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Centrelink income -->
+      <div id="a1CentrelinkInc" class="cond">
+        <div class="fld" style="margin-bottom:14px">
+          <label class="lbl">Income <span class="req">*</span></label>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
+            <div>
+              <div class="lbl" style="font-size:11px;color:var(--g400);margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px">Tax Type</div>
+              <div class="choices" id="a1CTaxChoices" style="gap:5px">
+                <div class="ch inline sel" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1CTaxChoices')">Before Tax</div>
+                <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1CTaxChoices')">After Tax</div>
+              </div>
+            </div>
+            <div>
+              <div class="lbl" style="font-size:11px;color:var(--g400);margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px">Pay Frequency</div>
+              <div class="choices" id="a1CFreqChoices" style="gap:5px">
+                <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1CFreqChoices')">Weekly</div>
+                <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1CFreqChoices')">Fortnightly</div>
+                <div class="ch inline sel" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1CFreqChoices')">Monthly</div>
+                <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1CFreqChoices')">Annually</div>
+              </div>
+            </div>
+            <div>
+              <div class="lbl" style="font-size:11px;color:var(--g400);margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px">Amount</div>
+              <div class="pre" style="max-width:220px"><span class="pre-sym">$</span><input type="number" id="a1CentreIncome" placeholder="0"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Second job -->
+      <div id="a1AddlIncomeSection" class="cond">
+        <hr>
+        <label class="toggle-row" id="a1SecondJobRow" onclick="toggleCustomCb('a1SecondJob','a1SJBox','a1SJCheck','a1SecondJobFields','a1SecondJobRow')">
+          <input type="checkbox" id="a1SecondJob">
+          <div class="custom-cb" id="a1SJBox">
+            <svg width="11" height="9" viewBox="0 0 11 9" fill="none" id="a1SJCheck" style="display:none"><path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span class="toggle-text">I have a second job</span>
+        </label>
+        <div id="a1SecondJobFields" class="cond">
+          <div class="indent">
+            <div class="fld" style="margin-bottom:12px">
+              <label class="lbl">Employment Type</label>
+              <div class="choices" id="a1SJ_EmpChoices"><div class="ch inline" onclick="selectCh(this,'a1SJEmp')">Full Time</div><div class="ch inline" onclick="selectCh(this,'a1SJEmp')">Part Time</div><div class="ch inline" onclick="selectCh(this,'a1SJEmp')">Casual</div><div class="ch inline" onclick="selectCh(this,'a1SJEmp')">Self-Employed</div></div>
+            </div>
+            <div class="row r2">
+              <div class="fld"><label class="lbl">Employer Name</label><input type="text" placeholder="Company name"></div>
+              <div class="fld"><label class="lbl">Occupation</label><input type="text" placeholder="e.g. Bartender"></div>
+            </div>
+            <div class="row r3">
+              <div class="fld"><label class="lbl">Years</label><input type="number" placeholder="Years" min="0"></div>
+              <div class="fld"><label class="lbl">Months</label><input type="number" placeholder="Months" min="0" max="11"></div>
+              <div class="fld"><label class="lbl">Monthly Income ($)</label><div class="pre"><span class="pre-sym">$</span><input type="number" placeholder="0"></div></div>
+            </div>
+          </div>
+        </div>
+        <label class="toggle-row" id="a1OtherIncRow" onclick="toggleCustomCb('a1OtherInc','a1OIBox','a1OICheck','a1OtherIncFields','a1OtherIncRow')">
+          <input type="checkbox" id="a1OtherInc">
+          <div class="custom-cb" id="a1OIBox">
+            <svg width="11" height="9" viewBox="0 0 11 9" fill="none" id="a1OICheck" style="display:none"><path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span class="toggle-text">I have other income sources <span style="color:var(--g400);font-weight:400">(investment, Centrelink, rental income)</span></span>
+        </label>
+        <div id="a1OtherIncFields" class="cond">
+          <div class="indent">
+            <div class="row r2">
+              <div class="fld">
+                <label class="lbl">Income Type</label>
+                <div class="choices" id="a1OtherIncTypeChoices"><div class="ch inline" onclick="selectCh(this,'a1OtherIncType')">Investment</div><div class="ch inline" onclick="selectCh(this,'a1OtherIncType')">Centrelink</div><div class="ch inline" onclick="selectCh(this,'a1OtherIncType')">Rental Income</div><div class="ch inline" onclick="selectCh(this,'a1OtherIncType')">Other</div></div>
+              </div>
+              <div class="fld"><label class="lbl">Monthly Amount ($)</label><div class="pre"><span class="pre-sym">$</span><input type="number" id="a1OtherIncAmt" placeholder="0"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMPLOYMENT APPLICANT 2 (co-borrower) -->
+  <div id="a2EmpCard" class="card" style="display:none">
+    <div class="card-head"><div class="card-title">Applicant 2 – Employment</div></div>
+    <div class="card-body">
+      <div class="fld" style="margin-bottom:14px">
+        <label class="lbl">Employment Status <span class="req">*</span></label>
+        <div class="choices" id="a2EmpChoices">
+          <div class="ch inline" onclick="selectEmployment(this,'a2')">Full Time</div>
+          <div class="ch inline" onclick="selectEmployment(this,'a2')">Part Time</div>
+          <div class="ch inline" onclick="selectEmployment(this,'a2')">Casual</div>
+          <div class="ch inline" onclick="selectEmployment(this,'a2')">Self-Employed</div>
+          <div class="ch inline" onclick="selectEmployment(this,'a2')">Centrelink</div>
+          <div class="ch inline" onclick="selectEmployment(this,'a2')">Unemployed</div>
+        </div>
+      </div>
+      <div id="a2EmpDetails" class="cond">
+        <div class="row r3">
+          <div class="fld"><label class="lbl">Employer / ABN <span class="req">*</span></label><input type="text" placeholder="Company name or ABN"></div>
+          <div class="fld"><label class="lbl">Occupation <span class="req">*</span></label><input type="text" placeholder="e.g. Accountant"></div>
+          <div class="fld"><label class="lbl">Monthly Income <span class="req">*</span></label><div class="pre"><span class="pre-sym">$</span><input type="number" placeholder="0"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="prev()">← Back</button>
+    <button class="btn btn-primary" onclick="next()">Continue →</button>
+  </div>
+</div>
+
+<!-- ==== STEP 6 – FINANCES ==== -->
+<div class="section" id="step-5">
+  <div class="sec-header">
+    <div class="sec-eye">Step 5 of 7</div>
+    <div class="sec-title">Assets, Liabilities & Expenses</div>
+    <div class="sec-desc">Help us understand your overall financial position.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-title">Assets</div></div>
+    <div class="card-body">
+      <div class="alert alert-info" style="margin-bottom:14px">
+        
+        <div>List everything you own that has value — e.g. <strong>property, vehicles, savings accounts, shares, superannuation</strong>. Include approximate values.</div>
+      </div>
+      <div id="assetList1"></div>
+      <p class="empty-state" id="assetEmpty1">No assets added yet.</p>
+      <button class="add-btn" onclick="addAsset('1')">+ Add Asset</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-title">Liabilities</div></div>
+    <div class="card-body">
+      <div class="alert alert-info" style="margin-bottom:14px">
+        
+        <div>List all money you owe — e.g. <strong>mortgages, car loans, personal loans, credit cards, BNPL (Afterpay/Zip), student debt</strong>. Include current balances and monthly repayments.</div>
+      </div>
+      <div id="liabList1"></div>
+      <p class="empty-state" id="liabEmpty1">No liabilities added yet.</p>
+      <button class="add-btn" onclick="addLiability('1')">+ Add Liability</button>
+    </div>
+  </div>
+
+  <!-- Expenses (personal only) -->
+  <div class="card" id="expCard">
+    <div class="card-head"><div class="card-title">Applicant 1 – Monthly Expenses</div></div>
+    <div class="card-body">
+      <div class="exp-grid" id="expenseGrid1"></div>
+    </div>
+  </div>
+
+  <!-- Co-borrower finances -->
+  <div id="a2FinanceSection" style="display:none">
+    <div class="card">
+      <div class="card-head"><div class="card-title">Co-Borrower – Assets</div></div>
+      <div class="card-body">
+        <div class="alert alert-info" style="margin-bottom:14px">
+          
+          <div>List everything you own that has value — e.g. <strong>property, vehicles, savings accounts, shares, superannuation</strong>.</div>
+        </div>
+        <div id="assetList2"></div>
+        <p class="empty-state" id="assetEmpty2">No assets added yet.</p>
+        <button class="add-btn" onclick="addAsset('2')">+ Add Asset</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-title">Co-Borrower – Liabilities</div></div>
+      <div class="card-body">
+        <div class="alert alert-info" style="margin-bottom:14px">
+          
+          <div>List all money you owe — e.g. <strong>mortgages, car loans, personal loans, credit cards, BNPL (Afterpay/Zip)</strong>.</div>
+        </div>
+        <div id="liabList2"></div>
+        <p class="empty-state" id="liabEmpty2">No liabilities added yet.</p>
+        <button class="add-btn" onclick="addLiability('2')">+ Add Liability</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-title">Applicant 2 – Monthly Expenses</div></div>
+      <div class="card-body">
+        <div class="exp-grid" id="expenseGrid2"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="prev()">← Back</button>
+    <button class="btn btn-primary" onclick="next()">Continue →</button>
+  </div>
+</div>
+
+<!-- ==== STEP 7 – DOCUMENTS ==== -->
+<div class="section" id="step-6">
+  <div class="sec-header">
+    <div class="sec-eye">Step 6 of 7</div>
+    <div class="sec-title">Supporting Documents</div>
+    <div class="sec-desc">Upload below, or text/email documents directly if easier.</div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-title">Applicant 1 – Documents</div></div>
+    <div class="card-body">
+      <div style="font-size:13px;color:var(--g500);margin-bottom:16px;padding:10px 14px;background:var(--g50);border-radius:8px;border:1px solid var(--g200)">
+         Text or email documents to <a href="tel:0433773021" style="color:var(--blue);font-weight:600">0433 773 021</a> or <a href="mailto:info@jlpfinancial.com.au" style="color:var(--blue);font-weight:600">info&#64;jlpfinancial.com.au</a>
+      </div>
+      <div id="docList1"><!-- rendered by JS --></div>
+    </div>
+  </div>
+  <div id="a2DocsCard" class="card" style="display:none">
+    <div class="card-head"><div class="card-title">Applicant 2 – Documents</div></div>
+    <div class="card-body">
+      <div id="docList2"></div>
+    </div>
+  </div>
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="prev()">← Back</button>
+    <button class="btn btn-primary" onclick="next()">Continue →</button>
+  </div>
+</div>
+
+<!-- ==== STEP 8 – SUBMIT ==== -->
+<div class="section" id="step-7">
+  <div class="sec-header">
+    <div class="sec-eye">Step 7 of 7</div>
+    <div class="sec-title">Review & Submit</div>
+    <div class="sec-desc">Almost there — please read and confirm the privacy consent.</div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-title">Privacy Consent</div></div>
+    <div class="card-body">
+      <div class="privacy-box">
+        By submitting this application, you authorise <strong>JLP Financial Pty Ltd</strong> to collect, use, and disclose your personal information for the purposes of assessing this loan application. After submission, you will receive an SMS with a link to sign the privacy consent form electronically. Please read our <a href="https://jlpfinancial.github.io/jlp-financial/privacy-policy.html" target="_blank" style="color:var(--blue);text-decoration:underline">Privacy Policy</a> for more information.
+      </div>
+      <label class="toggle-row" id="consent1Row" onclick="toggleCustomCb('consent1','c1Box','c1Check',null,'consent1Row')">
+        <input type="checkbox" id="consent1">
+        <div class="custom-cb" id="c1Box">
+          <svg width="11" height="9" viewBox="0 0 11 9" fill="none" id="c1Check" style="display:none"><path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="toggle-text">
+          <strong id="consent1Name">Applicant 1</strong>
+          I acknowledge that I will receive an email to sign the privacy consent form and authorise the collection and use of my personal information.
+        </span>
+      </label>
+      <div id="consent2Block" style="display:none">
+        <label class="toggle-row" id="consent2Row" onclick="toggleCustomCb('consent2','c2Box','c2Check',null,'consent2Row')">
+          <input type="checkbox" id="consent2">
+          <div class="custom-cb" id="c2Box">
+            <svg width="11" height="9" viewBox="0 0 11 9" fill="none" id="c2Check" style="display:none"><path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span class="toggle-text">
+            <strong id="consent2Name">Applicant 2</strong>
+            I acknowledge that I will receive an email to sign the privacy consent form and authorise the collection and use of my personal information.
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="prev()">← Back</button>
+    <button class="btn btn-gold" id="submitBtn" onclick="submitForm()">Submit Full Application </button>
+  </div>
+  <div class="google-row">
+    <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M24 9.5c3.9 0 6.5 1.7 8 3.1l5.9-5.9C34.3 3.4 29.7 1 24 1 14.8 1 7 6.7 3.8 14.7l6.9 5.3C12.4 13.8 17.7 9.5 24 9.5z"/><path fill="#34A853" d="M46.1 24.5c0-1.6-.1-2.8-.4-4H24v7.6h12.5c-.6 3-2.4 5.5-5 7.2l7.8 6c4.6-4.2 7.8-10.5 7.8-16.8z"/><path fill="#FBBC05" d="M10.7 28.6A15 15 0 0 1 9.5 24c0-1.6.3-3.2.8-4.6l-6.9-5.3A23 23 0 0 0 1 24c0 3.7.9 7.2 2.4 10.3l7.3-5.7z"/><path fill="#EA4335" d="M24 47c5.7 0 10.5-1.9 14-5.1l-7.8-6C28.3 37.4 26.3 38 24 38c-6.3 0-11.6-4.3-13.4-10L3.4 33.7C6.6 41.3 14.8 47 24 47z"/></svg>
+    <span class="stars"></span>
+    <span>5-star rated on Google</span>
+  </div>
+</div>
+
+<!-- Success screen -->
+<div id="successScreen" style="display:none">
+  <div class="success-card">
+    <div class="success-icon">✓</div>
+    <div class="success-title">Application Submitted!</div>
+    <p class="success-text">Thank you for completing your loan application. One of our team members will review your details and be in touch shortly.</p>
+    <div class="success-contact">
+      <strong style="color:var(--g900)">Questions? Contact us</strong><br>
+      <a href="mailto:info@jlpfinancial.com.au" style="color:inherit">info&#64;jlpfinancial.com.au</a> · <a href="tel:0433773021">0433 773 021</a>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<div class="toast" id="toast"></div>
+
+<script data-cfasync="false">
+function toggleCustomCb(cbId, boxId, checkId, fieldsId, rowId) {
+  const cb = document.getElementById(cbId);
+  cb.checked = !cb.checked;
+  const box = document.getElementById(boxId);
+  const check = document.getElementById(checkId);
+  if (box) { box.style.background = cb.checked ? 'var(--blue)' : ''; box.style.borderColor = cb.checked ? 'var(--blue)' : ''; }
+  if (check) check.style.display = cb.checked ? 'block' : 'none';
+  if (fieldsId) toggleEl(fieldsId, cb.checked);
+  if (rowId) toggleClass(rowId, cb.checked, 'on');
+}
+
+function selectIncOpt(el, groupId) {
+  const parent = document.getElementById(groupId);
+  parent.querySelectorAll('.ch').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+// --- STATE ---
+const SESSION_APP_ID = 'APP-' + Date.now();
+let state = {
+  step: 1,
+  purpose: 'personal',
+  finType: '',
+  applicantType: 'solo',
+  bizEntity: '',
+};
+
+const NON_ASSET = ['Refinance','Personal Loan','Debt Consolidation','Business Loan','Fleet','Working Capital','Other'];
+const BALLOON_TYPES = ['Vehicle','Truck','Marine','Caravan','Motorcycle'];
+const EXPENSES = ['Rent / Board','Groceries & Dining Out','Utilities & Rates','Telephone & Internet','Recreation & Entertainment','Clothing & Personal Care','Medical & Health','Transport','Vehicle Running Costs','Education','Childcare','Insurance'];
+const ASSET_CATS = ['Property','Vehicle','Savings','Shares/Investments','Superannuation','Other'];
+const LIAB_CATS = ['Credit Card','Personal Loan','Car Loan','Buy Now Pay Later','Mortgage','HECS/HELP','Other'];
+
+// --- INIT ---
+document.addEventListener('DOMContentLoaded', () => {
+  buildExpenses('1');
+  buildExpenses('2');
+  buildDocs('1');
+  // auto-save simulation
+  setInterval(showAutosave, 8000);
+});
+
+function showAutosave() {
+  const el = document.getElementById('autosave');
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// --- NAVIGATION ---
+function next() {
+  if (!validateStep()) return;
+  goTo(state.step + 1);
+}
+function prev() { goTo(state.step - 1); }
+function jumpStep(n) { if (n <= state.step) goTo(n); }
+
+function goTo(n) {
+  document.getElementById('step-' + state.step).classList.remove('active');
+  state.step = n;
+  document.getElementById('step-' + n).classList.add('active');
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress() {
+  document.querySelectorAll('.prog-step').forEach(el => {
+    const s = +el.dataset.step;
+    el.className = 'prog-step ' + (s < state.step ? 'done' : s === state.step ? 'active' : 'inactive');
+  });
+}
+
+// --- VALIDATION ---
+function validateStep() {
+  if (state.step === 2 && !state.finType) {
+    document.getElementById('noTypeAlert').style.display = 'flex';
+    return false;
+  }
+  return true;
+}
+
+// --- PURPOSE ---
+function selectPurpose(p) {
+  state.purpose = p;
+  state.finType = '';
+  const empStep = document.getElementById('progEmployment');
+  if (empStep) empStep.style.display = '';
+  const empLabel = document.getElementById('progEmpLabel');
+  if (empLabel) empLabel.textContent = p === 'business' ? 'Company' : 'Employment';
+  document.getElementById('p-personal').classList.toggle('sel', p === 'personal');
+  document.getElementById('p-business').classList.toggle('sel', p === 'business');
+  document.getElementById('personalTypes').style.display = p === 'personal' ? 'block' : 'none';
+  document.getElementById('businessTypes').style.display = p === 'business' ? 'block' : 'none';
+  document.getElementById('bizDetailsCard').style.display = p === 'business' ? 'block' : 'none';
+  document.getElementById('a1EmpCard').style.display = p === 'business' ? 'none' : 'block';
+  // Expenses only for personal
+  document.getElementById('expCard').style.display = p === 'personal' ? 'block' : 'none';
+  // Docs update
+  buildDocs('1');
+}
+
+// --- FINANCE TYPE ---
+function selectFinType(el, val) {
+  state.finType = val;
+  const grp = el.closest('.choices');
+  grp.querySelectorAll('.ch').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('noTypeAlert').style.display = 'none';
+  const isNonAsset = NON_ASSET.includes(val);
+  document.getElementById('assetFields').classList.toggle('show', !isNonAsset);
+  document.getElementById('descField').classList.toggle('show', isNonAsset && val !== 'Personal Loan');
+  document.getElementById('assetAmtSection').style.display = isNonAsset ? 'none' : 'block';
+  document.getElementById('directAmtSection').classList.toggle('show', isNonAsset);
+  checkBalloon();
+  buildDocs('1');
+  // update description placeholder
+  const ph = {
+    'Refinance': 'e.g. Existing car loan with XYZ Bank',
+    'Debt Consolidation': 'e.g. Credit cards and personal loans totalling $25,000',
+    'Business Loan': 'Describe the purpose of the business loan',
+    'Fleet': 'e.g. 5 delivery vehicles for logistics',
+    'Working Capital': 'e.g. Cash flow support for seasonal business',
+  };
+  const di = document.getElementById('fDesc');
+  if (di) di.placeholder = ph[val] || 'Describe the purpose of the loan';
+
+  // Update asset field placeholders based on type
+  const assetPlaceholders = {
+    'Truck':      { make: 'e.g. Isuzu',   model: 'e.g. NPR 45-155',  rego: 'Rego number', vin: 'VIN number' },
+    'Motorcycle': { make: 'e.g. Honda',   model: 'e.g. CB500F',      rego: 'Rego number', vin: 'VIN number' },
+    'Marine':     { make: 'e.g. Quintrex',model: 'e.g. 420 Hornet',  rego: 'Rego number', vin: 'Hull ID number' },
+    'Caravan':    { make: 'e.g. Jayco',   model: 'e.g. Journey 17.55',rego: 'Rego number', vin: 'VIN number' },
+    'Equipment':  { make: 'e.g. Caterpillar', model: 'e.g. 320 Excavator', rego: 'Asset ID (optional)', vin: 'Serial number' },
+  };
+  const ap = assetPlaceholders[val] || { make: 'e.g. Toyota', model: 'e.g. Hilux', rego: 'Registration number', vin: 'Vehicle identification number' };
+  const fMake = document.getElementById('fMake'); if (fMake) fMake.placeholder = ap.make;
+  const fModel = document.getElementById('fModel'); if (fModel) fModel.placeholder = ap.model;
+  const fRego = document.getElementById('fRego'); if (fRego) fRego.placeholder = ap.rego;
+  const fVin = document.getElementById('fVin'); if (fVin) fVin.placeholder = ap.vin;
+
+  calcLoan();
+}
+
+function checkBalloon() {
+  const dur = +document.getElementById('fLoanDur').value;
+  const show = BALLOON_TYPES.includes(state.finType) && dur <= 5;
+  document.getElementById('balloonFld').style.display = show ? '' : 'none';
+}
+
+// --- LOAN CALC ---
+function calcLoan() {
+  let amt = 0;
+  if (NON_ASSET.includes(state.finType)) {
+    amt = parseFloat(document.getElementById('fDirectAmt').value) || 0;
+  } else {
+    const p = parseFloat(document.getElementById('fAssetPrice').value) || 0;
+    const d = parseFloat(document.getElementById('fDeposit').value) || 0;
+    amt = Math.max(0, p - d);
+  }
+  document.getElementById('loanAmtDisplay').textContent = '$' + amt.toLocaleString('en-AU');
+  document.getElementById('loanMinErr').classList.toggle('show', amt > 0 && amt < 5000);
+}
+
+// --- CHOICE HELPERS ---
+function selectCh(el, group) {
+  const parent = el.closest('.choices');
+  parent.querySelectorAll('.ch').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function selectApplicant(type, el) {
+  state.applicantType = type;
+  el.closest('.choices').querySelectorAll('.ch').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  const isCo = type === 'co';
+  document.getElementById('coInfo').style.display = isCo ? 'flex' : 'none';
+  document.getElementById('a2PersonalCard').style.display = isCo ? 'block' : 'none';
+  document.getElementById('a2EmpCard').style.display = isCo ? 'block' : 'none';
+  document.getElementById('a2FinanceSection').style.display = isCo ? 'block' : 'none';
+  document.getElementById('consent2Block').style.display = isCo ? 'block' : 'none';
+  document.getElementById('a2DocsCard').style.display = isCo ? 'block' : 'none';
+  if (isCo) buildDocs('2');
+}
+
+function selectResidency(el, who) {
+  const parent = el.closest('.choices');
+  parent.querySelectorAll('.ch').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  const isVisa = el.textContent.trim() === 'Visa';
+  document.getElementById(who + 'VisaFields').classList.toggle('show', isVisa);
+  buildDocs('1');
+}
+
+function selectEmployment(el, who) {
+  const parent = el.closest('.choices');
+  parent.querySelectorAll('.ch').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  const val = el.textContent.trim();
+  const isUnemployed = val === 'Unemployed';
+  const isCentrelink = val === 'Centrelink';
+  const isActive = !isUnemployed && !isCentrelink;
+  const isSelf = val === 'Self-Employed';
+
+  if (who === 'a1') {
+    document.getElementById('a1UnemployedAlert').style.display = isUnemployed ? 'flex' : 'none';
+    document.getElementById('a1EmpDetails').classList.toggle('show', isActive);
+    document.getElementById('a1CentrelinkInc').classList.toggle('show', isCentrelink);
+    document.getElementById('a1AddlIncomeSection').classList.toggle('show', isActive || isCentrelink);
+    document.getElementById('a1SelfEmpField').classList.toggle('show', isSelf && isActive);
+    document.getElementById('a1EmployerFields').classList.toggle('show', !isSelf && isActive);
+    document.getElementById('a1OccField').classList.toggle('show', isActive);
+    buildDocs('1'); // update required docs
+  } else {
+    document.getElementById('a2EmpDetails').classList.toggle('show', isActive || isCentrelink);
+  }
+}
+
+function togglePassport(who) {
+  setTimeout(() => {
+    const cb = document.getElementById(who + 'NoLic');
+    cb.checked = !cb.checked;
+    const sec = document.getElementById(who + 'PassportSection');
+    const lic = document.getElementById(who + 'LicFields');
+    if (sec) sec.classList.toggle('show', cb.checked);
+    if (lic) lic.style.display = cb.checked ? 'none' : 'block';
+    const box = document.getElementById(who + 'CbBox');
+    const check = document.getElementById(who + 'CbCheck');
+    if (box) box.style.background = cb.checked ? 'var(--blue)' : '';
+    if (box) box.style.borderColor = cb.checked ? 'var(--blue)' : '';
+    if (check) check.style.display = cb.checked ? 'block' : 'none';
+  }, 10);
+}
+
+function checkPrevAddr(who) {
+  const yrs = +document.getElementById(who + 'AddrYrs').value;
+  document.getElementById(who + 'PrevAddrSection').classList.toggle('show', yrs !== '' && yrs < 3);
+}
+
+function checkPrevEmp(who) {
+  const yrs = document.getElementById(who + 'EmpYrs').value;
+  document.getElementById(who + 'PrevEmpSection').classList.toggle('show', yrs !== '' && +yrs < 3);
+}
+
+// --- BUSINESS ---
+function selectBizEntity(el, val) {
+  state.bizEntity = val;
+  const parent = el.closest('.choices');
+  parent.querySelectorAll('.ch').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('bizCompanyFields').classList.toggle('show', val === 'Company');
+  buildDocs('1');
+}
+
+function checkDirectors() {
+  const sd = document.querySelector('#bizSoleDirChoices .ch.sel');
+  const isSole = sd && sd.textContent.trim() === 'Yes';
+  document.getElementById('bizDirCountField').classList.toggle('show', !isSole);
+}
+
+// --- ASSETS & LIABILITIES ---
+function addAsset(n) {
+  const list = document.getElementById('assetList' + n);
+  const empty = document.getElementById('assetEmpty' + n);
+  if (empty) empty.style.display = 'none';
+  const id = Date.now();
+  const div = document.createElement('div');
+  div.className = 'entry';
+  div.id = 'asset_' + id;
+  const catOpts = ASSET_CATS.map(function(c){ return '<option>' + c + '</option>'; }).join('');
+  div.innerHTML = '<div class="entry-fields">'
+    + '<div class="entry-fld" style="min-width:130px"><div class="entry-lbl">Category</div>'
+    + '<select>' + catOpts + '</select></div>'
+    + '<div class="entry-fld grow"><div class="entry-lbl">Description</div><input type="text" placeholder="e.g. 2020 Toyota Corolla"></div>'
+    + '<div class="entry-fld" style="min-width:110px"><div class="entry-lbl">Value ($)</div><div class="pre"><span class="pre-sym">$</span><input type="number" placeholder="0"></div></div>'
+    + '</div>'
+    + '<button class="del-btn" onclick="removeEntry(\'asset_' + id + '\', \'assetEmpty' + n + '\')">x</button>';
+  list.appendChild(div);
+}
+
+function addLiability(n) {
+  const list = document.getElementById('liabList' + n);
+  const empty = document.getElementById('liabEmpty' + n);
+  if (empty) empty.style.display = 'none';
+  const id = Date.now();
+  const div = document.createElement('div');
+  div.className = 'entry';
+  div.id = 'liab_' + id;
+  const catOpts = LIAB_CATS.map(function(c){ return '<option>' + c + '</option>'; }).join('');
+  div.innerHTML = '<div class="entry-fields">'
+    + '<div class="entry-fld" style="min-width:130px"><div class="entry-lbl">Category</div>'
+    + '<select onchange="toggleCreditLimit(this,\'cl_' + id + '\')">' + catOpts + '</select></div>'
+    + '<div class="entry-fld grow"><div class="entry-lbl">Description</div><input type="text" placeholder="e.g. ANZ Credit Card"></div>'
+    + '<div class="entry-fld" style="min-width:100px"><div class="entry-lbl">Balance ($)</div><div class="pre"><span class="pre-sym">$</span><input type="number" placeholder="0"></div></div>'
+    + '<div class="entry-fld" style="min-width:100px;display:none" id="cl_' + id + '"><div class="entry-lbl">Credit Limit ($)</div><div class="pre"><span class="pre-sym">$</span><input type="number" placeholder="0"></div></div>'
+    + '<div class="entry-fld" style="min-width:110px"><div class="entry-lbl">Monthly Repayment ($)</div><div class="pre"><span class="pre-sym">$</span><input type="number" placeholder="0"></div></div>'
+    + '</div>'
+    + '<button class="del-btn" onclick="removeEntry(\'liab_' + id + '\', \'liabEmpty' + n + '\')">x</button>';
+  list.appendChild(div);
+}
+
+function toggleCreditLimit(sel, clId) {
+  document.getElementById(clId).style.display = sel.value === 'Credit Card' ? 'flex' : 'none';
+}
+
+function removeEntry(id, emptyId) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+  const listId = emptyId.replace('Empty','List');
+  const list = document.getElementById(listId);
+  const empty = document.getElementById(emptyId);
+  if (list && empty && !list.children.length) empty.style.display = 'block';
+}
+
+// --- EXPENSES ---
+function buildExpenses(n) {
+  const grid = document.getElementById('expenseGrid' + n);
+  if (!grid) return;
+  grid.innerHTML = EXPENSES.map(e => `
+    <div class="exp-row">
+      <div class="exp-lbl">${e}</div>
+      <div class="exp-input-wrap"><span class="pre-sym">$</span><input type="number" value="0" min="0"></div>
+    </div>`).join('');
+}
+
+// --- DOCUMENTS ---
+function buildDocs(n) {
+  const list = document.getElementById('docList' + n);
+  if (!list) return;
+
+  // Determine needed docs
+  const resEl = document.querySelector(`#a${n}ResChoices .ch.sel`);
+  const res = resEl ? resEl.textContent.trim() : '';
+  const empEl = document.querySelector(`#a${n}EmpChoices .ch.sel`);
+  const emp = empEl ? empEl.textContent.trim() : '';
+  const otherIncEl = document.querySelector(`#a${n}OtherIncTypeChoices .ch.sel`);
+  const otherInc = otherIncEl ? otherIncEl.textContent.trim() : '';
+
+  const idDocs = ['Driver\'s Licence (Front)', 'Driver\'s Licence (Back)'];
+  if (res === 'Visa') { idDocs.push('Passport'); idDocs.push('VEVO Document'); }
+  else { idDocs.push('Passport or Medicare Card'); }
+
+  let incDocs = [];
+  if (state.purpose === 'business') {
+    incDocs = ['Most Recent Notice of Assessment', 'Individual Tax Return'];
+  } else if (emp === 'Self-Employed') {
+    incDocs = ['Most Recent Notice of Assessment', 'Individual Tax Return'];
+  } else if (emp === 'Centrelink') {
+    incDocs = ['Centrelink Income Statement'];
+  } else {
+    incDocs = ['Most Recent Payslip (1 of 2)', 'Most Recent Payslip (2 of 2)'];
+  }
+  if (otherInc === 'Centrelink' && emp !== 'Centrelink') incDocs.push('Centrelink Income Statement');
+  if (otherInc === 'Rental Income') incDocs.push('Most Recent Rental Ledger');
+
+
+  const bizDocs = state.bizEntity === 'Trust' ? [{ group: 'Trust Documents', items: ['Trust Deed'] }] : [];
+
+  const groups = [
+    { group: 'Identification', items: idDocs },
+    ...(state.purpose === 'business' ? bizDocs : [{ group: 'Income & Financials', items: incDocs }]),
+  ];
+
+  list.innerHTML = groups.map(g => `
+    <div class="doc-group-lbl">${g.group}</div>
+    ${g.items.map(item => {
+      const sid = 'doc_' + n + '_' + item.replace(/[^a-z0-9]/gi,'_');
+      return `<div class="doc-row">
+        <div class="doc-info"><div><div class="doc-name">${item}</div><div class="doc-status" id="st_${sid}">Not uploaded</div></div></div>
+        <label class="upload-btn" id="btn_${sid}" for="file_${sid}">↑ Upload</label>
+        <input type="file" id="file_${sid}" accept="image/*,.pdf,.heic,.heif" onchange="markUploaded(this,'st_${sid}','btn_${sid}')">
+      </div>`;
+    }).join('')}
+  `).join('');
+}
+
+async function markUploaded(input, stId, btnId) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  const stEl = document.getElementById(stId);
+  const btnEl = document.getElementById(btnId);
+  stEl.textContent = 'Uploading…';
+  stEl.className = 'doc-status';
+  btnEl.textContent = 'Uploading…';
+  btnEl.className = 'upload-btn';
+
+  try {
+    // Use app ID or timestamp as folder
+    const appId = SESSION_APP_ID;
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const path = appId + '/' + stId + '_' + safeName;
+
+    const res = await fetch('https://gxwwcrcllhaaoewgcbeo.supabase.co/storage/v1/object/documents/' + path, {
+      method: 'POST',
+      headers: {
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4d3djcmNsbGhhYW9ld2djYmVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MjE4MTIsImV4cCI6MjA4ODA5NzgxMn0.twL-AmGGqfH29Nsl2p-Ezqi5zJ_h-3TOrguFAdjiET8',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4d3djcmNsbGhhYW9ld2djYmVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MjE4MTIsImV4cCI6MjA4ODA5NzgxMn0.twL-AmGGqfH29Nsl2p-Ezqi5zJ_h-3TOrguFAdjiET8',
+        'Content-Type': file.type || 'application/octet-stream',
+        'x-upsert': 'true'
+      },
+      body: file
+    });
+
+    if (res.ok) {
+      // Store path on the input element for later retrieval
+      input.dataset.storagePath = path;
+      input.dataset.fileName = file.name;
+      stEl.textContent = '✓ ' + file.name;
+      stEl.className = 'doc-status uploaded';
+      btnEl.textContent = '✓ Uploaded';
+      btnEl.className = 'upload-btn done';
+    } else {
+      const err = await res.text();
+      console.warn('Upload failed:', err);
+      stEl.textContent = '✗ Upload failed';
+      stEl.className = 'doc-status';
+      btnEl.textContent = '↑ Retry';
+      btnEl.className = 'upload-btn';
+    }
+  } catch(e) {
+    console.warn('Upload error:', e);
+    stEl.textContent = '✗ Upload failed';
+    stEl.className = 'doc-status';
+    btnEl.textContent = '↑ Retry';
+    btnEl.className = 'upload-btn';
+  }
+}
+
+// --- UTILS ---
+function toggleEl(id, show) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('show', show);
+}
+function toggleClass(id, add, cls) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle(cls, add);
+}
+function showToast(msg, duration = 3500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// --- CONSENT NAME SYNC ---
+document.addEventListener('input', e => {
+  if (e.target.id === 'a1FirstName' || e.target.id === 'a1LastName') {
+    const fn = document.getElementById('a1FirstName').value;
+    const ln = document.getElementById('a1LastName').value;
+    const name = [fn, ln].filter(Boolean).join(' ');
+    document.getElementById('consent1Name').textContent = name || 'Applicant 1';
+  }
+  if (e.target.id === 'a2FirstName' || e.target.id === 'a2LastName') {
+    const fn = document.getElementById('a2FirstName').value;
+    const ln = document.getElementById('a2LastName').value;
+    const name = [fn, ln].filter(Boolean).join(' ');
+    document.getElementById('consent2Name').textContent = name || 'Applicant 2';
+  }
+});
+
+// --- SUBMIT ---
+function submitForm() {
+  const consent1 = document.getElementById('consent1');
+  const consent2 = document.getElementById('consent2');
+  if (!consent1.checked) {
+    document.getElementById('consent1Row').style.borderColor = 'var(--red)';
+    showToast('! Applicant 1 must agree to the privacy consent');
+    setTimeout(() => document.getElementById('consent1Row').style.borderColor = '', 2500);
+    return;
+  }
+  if (state.applicantType === 'co' && !consent2.checked) {
+    document.getElementById('consent2Row').style.borderColor = 'var(--red)';
+    showToast('! Applicant 2 must agree to the privacy consent');
+    setTimeout(() => document.getElementById('consent2Row').style.borderColor = '', 2500);
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = 'Submitting...';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    // Collect all form data
+    // Helper to safely get values
+    const gv = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+    // Collect uploaded document paths
+    const uploadedDocs = [];
+    document.querySelectorAll('input[type="file"][data-storage-path]').forEach(inp => {
+      uploadedDocs.push({ name: inp.dataset.fileName, path: inp.dataset.storagePath });
+    });
+    const gc = sel => { const el = document.querySelector(sel); return el ? el.textContent.trim() : ''; };
+    // Collect assets
+    const assetRows = [];
+    document.querySelectorAll('#assetList1 .entry').forEach(e => {
+      const sel = e.querySelector('select'); const inputs = e.querySelectorAll('input');
+      assetRows.push({ category: sel ? sel.value : '', description: inputs[0]?.value||'', value: inputs[1]?.value||'' });
+    });
+    // Collect liabilities
+    const liabRows = [];
+    document.querySelectorAll('#liabList1 .entry').forEach(e => {
+      const sel = e.querySelector('select'); const inputs = e.querySelectorAll('input');
+      liabRows.push({ category: sel ? sel.value : '', description: inputs[0]?.value||'', balance: inputs[1]?.value||'', repayment: inputs[2]?.value||'' });
+    });
+    // Collect expenses
+    const expenseRows = [];
+    document.querySelectorAll('#expenseGrid1 .exp-row').forEach(e => {
+      const lbl = e.querySelector('.exp-lbl')?.textContent||'';
+      const val = e.querySelector('input')?.value||'0';
+      if (val && val !== '0') expenseRows.push({ label: lbl, amount: val });
+    });
+    const app = {
+      id: SESSION_APP_ID,
+      submittedAt: new Date().toISOString(),
+      status: 'New',
+      notes: '',
+      purpose: state.purpose,
+      finType: state.finType,
+      applicantType: state.applicantType,
+      loanAmount: document.getElementById('loanAmtDisplay') ? document.getElementById('loanAmtDisplay').textContent : '',
+      loanDuration: gv('fLoanDur'),
+      balloon: gv('fBalloon'),
+      // Asset
+      make: gv('fMake'), model: gv('fModel'), year: gv('fYear'), rego: gv('fRego'), vin: gv('fVin'),
+      purchaseFrom: gc('#purchaseFromChoices .ch.sel'),
+      condition: gc('#condChoices .ch.sel'),
+      // Applicant 1
+      a1: {
+        title: gc('#a1TitleChoices .ch.sel'),
+        firstName: gv('a1FirstName'), lastName: gv('a1LastName'),
+        mobile: gv('a1Mobile'), email: gv('a1Email'), dob: gv('a1DOB'),
+        marital: gc('#a1MaritalChoices .ch.sel'),
+        dependents: gv('a1Deps'),
+        residency: gc('#a1ResChoices .ch.sel'),
+        visaNo: gv('a1VisaNo'), visaExp: gv('a1VisaExp'),
+        licNo: gv('a1LicNo'), licExp: gv('a1LicExp'), licCard: gv('a1LicCard'),
+        passNo: gv('a1PassNo'), passExp: gv('a1PassExp'), passCountry: gv('a1PassCountry'),
+        living: gc('#a1LivingChoices .ch.sel'),
+        street: gv('a1Street'), suburb: gv('a1Suburb'), state: gv('a1State'), postcode: gv('a1Post'),
+        addrYrs: gv('a1AddrYrs'), addrMos: gv('a1AddrMos'),
+        prevStreet: gv('a1PrevStreet'), prevSuburb: gv('a1PrevSuburb'), prevState: gv('a1PrevState'), prevPost: gv('a1PrevPost'),
+        empStatus: gc('#a1EmpChoices .ch.sel'),
+        abn: gv('a1ABN'), empName: gv('a1EmpName'), empPhone: gv('a1EmpPhone'),
+        occupation: gv('a1Occ'),
+        empYrs: gv('a1EmpYrs'), empMos: gv('a1EmpMos'),
+        income: gv('a1Income'), incomeTax: gc('#a1TaxChoices .ch.sel'), incomeFreq: gc('#a1FreqChoices .ch.sel'),
+        centreIncome: gv('a1CentreIncome'),
+        otherIncAmt: gv('a1OtherIncAmt'), otherIncType: gc('#a1OtherIncTypeChoices .ch.sel'),
+      },
+      // Applicant 2
+      a2: state.applicantType === 'co' ? {
+        title: gc('#a2TitleChoices .ch.sel'),
+        firstName: gv('a2FirstName'), lastName: gv('a2LastName'),
+        mobile: gv('a2Mobile'), email: gv('a2Email'), dob: gv('a2DOB'),
+        residency: gc('#a2ResChoices .ch.sel'),
+        empStatus: gc('#a2EmpChoices .ch.sel'),
+        living: gc('#a2LivingChoices .ch.sel'),
+      } : null,
+      // Business
+      biz: state.purpose === 'business' ? {
+        abn: gv('bizABN'), name: gv('bizName'), industry: gv('bizIndustry'),
+        entity: state.bizEntity, abnDur: gv('bizABNDur'),
+        revenue: gv('bizRevenue'), expenses: gv('bizExpenses'),
+        street: gv('bizStreet'), suburb: gv('bizSuburb'), state: gv('bizState'), postcode: gv('bizPost'),
+      } : null,
+      // Finances
+      assets: assetRows,
+      liabilities: liabRows,
+      expenses: expenseRows,
+    };
+
+    // Save to Supabase (non-blocking)
+    (async () => { try {
+      const payload = {
+        app_id: app.id,
+        submitted_at: app.submittedAt,
+        status: app.status,
+        notes: app.notes,
+        purpose: app.purpose,
+        fin_type: app.finType,
+        applicant_type: app.applicantType,
+        loan_amount: app.loanAmount,
+        loan_duration: app.loanDuration,
+        balloon: app.balloon,
+        make: app.make,
+        model: app.model,
+        year: app.year,
+        rego: app.rego,
+        vin: app.vin,
+        condition: app.condition,
+        purchase_from: app.purchaseFrom,
+        a1: app.a1,
+        a2: app.a2,
+        biz: app.biz,
+        assets: app.assets,
+        liabilities: app.liabilities,
+        expenses: app.expenses,
+        documents: app.uploadedDocs,
+      };
+      const res = await fetch('https://gxwwcrcllhaaoewgcbeo.supabase.co/rest/v1/applications', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4d3djcmNsbGhhYW9ld2djYmVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MjE4MTIsImV4cCI6MjA4ODA5NzgxMn0.twL-AmGGqfH29Nsl2p-Ezqi5zJ_h-3TOrguFAdjiET8',
+          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4d3djcmNsbGhhYW9ld2djYmVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MjE4MTIsImV4cCI6MjA4ODA5NzgxMn0.twL-AmGGqfH29Nsl2p-Ezqi5zJ_h-3TOrguFAdjiET8',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) {
+        const err = await res.text();
+        console.warn('Supabase save failed:', err);
+      }
+    } catch(e) { console.warn('Could not save to Supabase', e); } })();
+    // Fire GHL webhook
+    (async () => {
+      try {
+        const a = app;
+        await fetch('https://services.leadconnectorhq.com/hooks/jlep72SieYHunxGEJWrI/webhook-trigger/67c0ef80-44bd-46d1-8004-7e74d7218999', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            first_name: a.a1?.firstName || '',
+            last_name: a.a1?.lastName || '',
+            email: a.a1?.email || '',
+            phone: a.a1?.mobile || '',
+            application_id: a.id,
+            loan_amount: a.loanAmount || '',
+            loan_duration: a.loanDuration || '',
+            finance_type: a.finType || '',
+            purpose: a.purpose || '',
+            asset_make: a.make || '',
+            asset_model: a.model || '',
+            asset_year: a.year || '',
+            address: a.a1?.street || '',
+            city: a.a1?.suburb || '',
+            state: a.a1?.state || '',
+            postal_code: a.a1?.postcode || '',
+            employment_status: a.a1?.empStatus || '',
+            employer: a.a1?.empName || '',
+            income: a.a1?.income || '',
+            submitted_at: a.submittedAt,
+            source: 'JLP Loan Application'
+          })
+        });
+      } catch(e) { console.warn('GHL webhook failed', e); }
+    })();
+
+
+
+    // Fire GHL webhook
+    (async () => {
+      try {
+        const a = app;
+        const ghlPayload = {
+          // Contact info
+          first_name: a.a1?.firstName || '',
+          last_name: a.a1?.lastName || '',
+          email: a.a1?.email || '',
+          phone: a.a1?.mobile || '',
+          // Loan details
+          application_id: a.id,
+          loan_amount: a.loanAmount || '',
+          loan_duration: a.loanDuration || '',
+          finance_type: a.finType || '',
+          purpose: a.purpose || '',
+          // Asset
+          asset_make: a.make || '',
+          asset_model: a.model || '',
+          asset_year: a.year || '',
+          asset_condition: a.condition || '',
+          // Address
+          address: a.a1?.street || '',
+          city: a.a1?.suburb || '',
+          state: a.a1?.state || '',
+          postal_code: a.a1?.postcode || '',
+          // Employment
+          employment_status: a.a1?.empStatus || '',
+          employer: a.a1?.empName || '',
+          income: a.a1?.income || '',
+          // Meta
+          submitted_at: a.submittedAt,
+          source: 'JLP Loan Application'
+        };
+        await fetch('https://services.leadconnectorhq.com/hooks/jlep72SieYHunxGEJWrI/webhook-trigger/9540405a-8276-4540-b43c-ef1a8c9487a7', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(ghlPayload)
+        });
+        console.log('GHL webhook fired');
+      } catch(e) { console.warn('GHL webhook failed', e); }
+    })();
+
+    document.getElementById('mainContent').innerHTML = '';
+    const prog = document.querySelector('.progress-wrap');
+    if (prog) prog.style.display = 'none';
+    document.getElementById('mainContent').innerHTML =
+      '<div class="success-card">'
+      + '<div class="success-icon">&#10003;</div>'
+      + '<div class="success-title">Application Submitted!</div>'
+      + '<p class="success-text">Thank you for completing your loan application. One of our team members will review your details and be in touch with you shortly.</p>'
+      + '<div class="success-contact">'
+      + '<strong style="color:var(--g900)">Questions? Contact us</strong><br>'
+      + '<a href="mailto:info&#64;jlpfinancial.com.au">info&#64;jlpfinancial.com.au</a> &middot; <a href="tel:0433773021">0433 773 021</a>'
+      + '</div>'
+      + '</div>';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 1200);
+}
+
+function toggleCustomCb(cbId, boxId, checkId, fieldsId, rowId) {
+  const cb = document.getElementById(cbId);
+  cb.checked = !cb.checked;
+  const box = document.getElementById(boxId);
+  const check = document.getElementById(checkId);
+  if (box) { box.style.background = cb.checked ? 'var(--blue)' : ''; box.style.borderColor = cb.checked ? 'var(--blue)' : ''; }
+  if (check) check.style.display = cb.checked ? 'block' : 'none';
+  if (fieldsId) toggleEl(fieldsId, cb.checked);
+  if (rowId) toggleClass(rowId, cb.checked, 'on');
+}
+
+function selectIncOpt(el, groupId) {
+  const parent = doc
