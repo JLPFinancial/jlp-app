@@ -1600,6 +1600,9 @@ async function markUploaded(input, stId, btnId) {
       // Store path on the input element for later retrieval
       input.dataset.storagePath = path;
       input.dataset.fileName = file.name;
+      // Save slot name for later collection
+      const nameEl = input.closest('.doc-row')?.querySelector('.doc-name');
+      if (nameEl) input.dataset.slotName = nameEl.textContent.trim();
       stEl.textContent = '✓ ' + file.name;
       stEl.className = 'doc-status uploaded';
       btnEl.textContent = '✓ Uploaded';
@@ -1681,7 +1684,11 @@ function submitForm() {
     // Collect uploaded document paths
     const uploadedDocs = [];
     document.querySelectorAll('input[type="file"][data-storage-path]').forEach(inp => {
-      uploadedDocs.push({ name: inp.dataset.fileName, path: inp.dataset.storagePath });
+      // Get slot name from the status element label (st_doc_1_Driver_s_Licence_Front -> Driver's Licence (Front))
+      const stId = inp.id.replace('file_', 'st_');
+      const stEl = document.getElementById(stId);
+      const slotName = inp.dataset.slotName || (stEl ? stEl.closest('.doc-row')?.querySelector('.doc-name')?.textContent : null) || inp.dataset.fileName;
+      uploadedDocs.push({ name: inp.dataset.fileName, slot: slotName, path: inp.dataset.storagePath });
     });
     const gc = sel => { const el = document.querySelector(sel); return el ? el.textContent.trim() : ''; };
     // Collect assets
