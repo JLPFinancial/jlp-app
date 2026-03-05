@@ -260,9 +260,9 @@ hr { border: none; border-top: 1px solid var(--g100); margin: 18px 0; }
 }
 .toggle-row:hover .custom-cb { border-color: var(--blue); }
 .toggle-text { font-size: 13px; color: var(--g700); line-height: 1.5; display: flex; align-items: center; gap: 8px; }
-.toggle-text strong { color: var(--g900); display: inline; font-size: 13.5px; white-space: nowrap; }
+.toggle-text strong { color: var(--g900); display: block; font-size: 13.5px; margin-bottom: 1px; }
 .toggle-text { font-size: 13px; color: var(--g700); line-height: 1.5; }
-.toggle-text strong { color: var(--g900); display: inline; font-size: 13.5px; white-space: nowrap; }
+.toggle-text strong { color: var(--g900); display: block; font-size: 13.5px; margin-bottom: 1px; }
 
 .cond { display: none; }
 .cond.show { display: block; }
@@ -280,8 +280,8 @@ hr { border: none; border-top: 1px solid var(--g100); margin: 18px 0; }
 .del-btn { width: 32px; height: 32px; flex-shrink: 0; border: none; background: rgba(220,38,38,.07); color: var(--red); border-radius: 7px; cursor: pointer; font-size: 17px; display: flex; align-items: center; justify-content: center; transition: background .15s; margin-bottom: 1px; }
 .del-btn:hover { background: rgba(220,38,38,.14); }
 
-.add-btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 24px; border: 2px dashed var(--blue); border-radius: var(--radius); background: rgba(26,86,219,.04); color: var(--blue); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all .14s; width: 100%; justify-content: center; margin-top: 8px; }
-.add-btn:hover { border-style: solid; background: rgba(26,86,219,.08); }
+.add-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1.5px dashed var(--g300); border-radius: var(--radius); background: transparent; color: var(--blue); font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all .14s; }
+.add-btn:hover { border-color: var(--blue); background: rgba(26,86,219,.03); }
 
 .empty-state { font-size: 13px; color: var(--g400); font-style: italic; padding: 8px 0; }
 
@@ -364,7 +364,10 @@ input[type=file] { display: none; }
 </style>
 </head>
 <body>
-
+<a href="jlp-crm.html" style="position:fixed;bottom:20px;right:20px;z-index:9999;background:#0f2140;color:#c9a84c;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;padding:10px 18px;border-radius:40px;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.25);display:flex;align-items:center;gap:7px;letter-spacing:.3px">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+  Open CRM
+</a>
 
 <!-- HEADER -->
 <header class="app-header">
@@ -601,7 +604,7 @@ input[type=file] { display: none; }
       <hr>
       <div class="fld" style="margin-bottom:14px">
         <label class="lbl">Residential Status <span class="req">*</span></label>
-        <div class="choices grid4" id="a1ResChoices">
+        <div class="choices grid3" id="a1ResChoices">
           <div class="ch" onclick="selectResidency(this,'a1')">Australian Citizen</div>
           <div class="ch" onclick="selectResidency(this,'a1')">Permanent Resident</div>
           <div class="ch" onclick="selectResidency(this,'a1')">New Zealand Citizen</div>
@@ -709,7 +712,7 @@ input[type=file] { display: none; }
       <hr>
       <div class="fld" style="margin-bottom:14px">
         <label class="lbl">Residential Status <span class="req">*</span></label>
-        <div class="choices grid4" id="a2ResChoices">
+        <div class="choices grid3" id="a2ResChoices">
           <div class="ch" onclick="selectResidency(this,'a2')">Australian Citizen</div>
           <div class="ch" onclick="selectResidency(this,'a2')">Permanent Resident</div>
           <div class="ch" onclick="selectResidency(this,'a2')">New Zealand Citizen</div>
@@ -805,7 +808,7 @@ input[type=file] { display: none; }
       </div>
       <div class="fld" style="margin-bottom:14px">
         <label class="lbl">Entity Type</label>
-        <div class="choices grid4" id="bizEntityChoices">
+        <div class="choices grid3" id="bizEntityChoices">
           <div class="ch" onclick="selectBizEntity(this,'Company')">Company</div>
           <div class="ch" onclick="selectBizEntity(this,'Sole Trader')">Sole Trader</div>
           <div class="ch" onclick="selectBizEntity(this,'Partnership')">Partnership</div>
@@ -884,27 +887,17 @@ input[type=file] { display: none; }
         </div>
         <div class="fld" style="margin-bottom:14px">
           <label class="lbl">Income <span class="req">*</span></label>
-          <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
-            <div>
-              <div class="lbl" style="font-size:11px;color:var(--g400);margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px">Tax Type</div>
-              <div class="choices" id="a1TaxChoices" style="gap:5px">
-                <div class="ch inline sel" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1TaxChoices')">Before Tax</div>
-                <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1TaxChoices')">After Tax</div>
-              </div>
+          <div style="display:flex;flex-direction:column;gap:7px;margin-top:2px">
+            <div class="choices" id="a1TaxChoices" style="gap:5px">
+              <div class="ch inline sel" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1TaxChoices')">Before Tax</div>
+              <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1TaxChoices')">After Tax</div>
             </div>
-            <div>
-              <div class="lbl" style="font-size:11px;color:var(--g400);margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px">Pay Frequency</div>
-              <div class="choices" id="a1FreqChoices" style="gap:5px">
-                <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1FreqChoices')">Weekly</div>
-                <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1FreqChoices')">Fortnightly</div>
-                <div class="ch inline sel" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1FreqChoices')">Monthly</div>
-                <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1FreqChoices')">Annually</div>
-              </div>
+            <div class="choices" id="a1FreqChoices" style="gap:5px">
+              <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1FreqChoices')">Weekly</div>
+              <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1FreqChoices')">Fortnightly</div>
+              <div class="ch inline sel" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1FreqChoices')">Monthly</div>
             </div>
-            <div>
-              <div class="lbl" style="font-size:11px;color:var(--g400);margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px">Amount</div>
-              <div class="pre" style="max-width:220px"><span class="pre-sym">$</span><input type="number" id="a1Income" placeholder="0"></div>
-            </div>
+            <div class="pre" style="max-width:200px"><span class="pre-sym">$</span><input type="number" id="a1Income" placeholder="0"></div>
           </div>
           <div class="err-msg" id="a1IncomeErr">Required</div>
         </div>
@@ -935,27 +928,17 @@ input[type=file] { display: none; }
       <div id="a1CentrelinkInc" class="cond">
         <div class="fld" style="margin-bottom:14px">
           <label class="lbl">Income <span class="req">*</span></label>
-          <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
-            <div>
-              <div class="lbl" style="font-size:11px;color:var(--g400);margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px">Tax Type</div>
-              <div class="choices" id="a1CTaxChoices" style="gap:5px">
-                <div class="ch inline sel" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1CTaxChoices')">Before Tax</div>
-                <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1CTaxChoices')">After Tax</div>
-              </div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <div class="choices" id="a1CTaxChoices" style="gap:5px">
+              <div class="ch inline sel" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1CTaxChoices')">Before Tax</div>
+              <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1CTaxChoices')">After Tax</div>
             </div>
-            <div>
-              <div class="lbl" style="font-size:11px;color:var(--g400);margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px">Pay Frequency</div>
-              <div class="choices" id="a1CFreqChoices" style="gap:5px">
-                <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1CFreqChoices')">Weekly</div>
-                <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1CFreqChoices')">Fortnightly</div>
-                <div class="ch inline sel" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1CFreqChoices')">Monthly</div>
-                <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1CFreqChoices')">Annually</div>
-              </div>
+            <div class="choices" id="a1CFreqChoices" style="gap:5px">
+              <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1CFreqChoices')">Weekly</div>
+              <div class="ch inline" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1CFreqChoices')">Fortnightly</div>
+              <div class="ch inline sel" style="font-size:12px;padding:6px 11px" onclick="selectIncOpt(this,'a1CFreqChoices')">Monthly</div>
             </div>
-            <div>
-              <div class="lbl" style="font-size:11px;color:var(--g400);margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px">Amount</div>
-              <div class="pre" style="max-width:220px"><span class="pre-sym">$</span><input type="number" id="a1CentreIncome" placeholder="0"></div>
-            </div>
+            <div class="pre"><span class="pre-sym">$</span><input type="number" id="a1CentreIncome" placeholder="0"></div>
           </div>
         </div>
       </div>
@@ -1048,7 +1031,7 @@ input[type=file] { display: none; }
   </div>
 
   <div class="card">
-    <div class="card-head"><div class="card-title">Assets</div></div>
+    <div class="card-head"><div class="card-title">Applicant 1 – Assets</div></div>
     <div class="card-body">
       <div class="alert alert-info" style="margin-bottom:14px">
         
@@ -1061,7 +1044,7 @@ input[type=file] { display: none; }
   </div>
 
   <div class="card">
-    <div class="card-head"><div class="card-title">Liabilities</div></div>
+    <div class="card-head"><div class="card-title">Applicant 1 – Liabilities</div></div>
     <div class="card-body">
       <div class="alert alert-info" style="margin-bottom:14px">
         
@@ -1084,7 +1067,7 @@ input[type=file] { display: none; }
   <!-- Co-borrower finances -->
   <div id="a2FinanceSection" style="display:none">
     <div class="card">
-      <div class="card-head"><div class="card-title">Co-Borrower – Assets</div></div>
+      <div class="card-head"><div class="card-title">Applicant 2 – Assets</div></div>
       <div class="card-body">
         <div class="alert alert-info" style="margin-bottom:14px">
           
@@ -1096,7 +1079,7 @@ input[type=file] { display: none; }
       </div>
     </div>
     <div class="card">
-      <div class="card-head"><div class="card-title">Co-Borrower – Liabilities</div></div>
+      <div class="card-head"><div class="card-title">Applicant 2 – Liabilities</div></div>
       <div class="card-body">
         <div class="alert alert-info" style="margin-bottom:14px">
           
@@ -1160,7 +1143,7 @@ input[type=file] { display: none; }
     <div class="card-head"><div class="card-title">Privacy Consent</div></div>
     <div class="card-body">
       <div class="privacy-box">
-        By submitting this application, you authorise <strong>JLP Financial Pty Ltd</strong> to collect, use, and disclose your personal information for the purposes of assessing this loan application. After submission, you will receive an SMS with a link to sign the privacy consent form electronically. Please read our <a href="https://jlpfinancial.github.io/jlp-financial/privacy-policy.html" target="_blank" style="color:var(--blue);text-decoration:underline">Privacy Policy</a> for more information.
+        By submitting this application, you authorise <strong>JLP Financial Pty Ltd</strong> to collect, use, and disclose your personal information for the purposes of assessing this loan application. After submission, you will receive an SMS with a link to sign the privacy consent form electronically.
       </div>
       <label class="toggle-row" id="consent1Row" onclick="toggleCustomCb('consent1','c1Box','c1Check',null,'consent1Row')">
         <input type="checkbox" id="consent1">
@@ -1205,7 +1188,7 @@ input[type=file] { display: none; }
     <p class="success-text">Thank you for completing your loan application. One of our team members will review your details and be in touch shortly.</p>
     <div class="success-contact">
       <strong style="color:var(--g900)">Questions? Contact us</strong><br>
-      <a href="mailto:info@jlpfinancial.com.au" style="color:inherit">info&#64;jlpfinancial.com.au</a> · <a href="tel:0433773021">0433 773 021</a>
+      <a href="mailto:info@jlpfinancial.com.au">info&#64;jlpfinancial.com.au</a> · <a href="tel:0433773021">0433 773 021</a>
     </div>
   </div>
 </div>
@@ -1663,13 +1646,13 @@ document.addEventListener('input', e => {
     const fn = document.getElementById('a1FirstName').value;
     const ln = document.getElementById('a1LastName').value;
     const name = [fn, ln].filter(Boolean).join(' ');
-    document.getElementById('consent1Name').textContent = name || 'Applicant 1';
+    document.getElementById('consent1Name').textContent = name ? `Applicant 1 - ${name}` : 'Applicant 1';
   }
   if (e.target.id === 'a2FirstName' || e.target.id === 'a2LastName') {
     const fn = document.getElementById('a2FirstName').value;
     const ln = document.getElementById('a2LastName').value;
     const name = [fn, ln].filter(Boolean).join(' ');
-    document.getElementById('consent2Name').textContent = name || 'Applicant 2';
+    document.getElementById('consent2Name').textContent = name ? `Applicant 2 - ${name}` : 'Applicant 2';
   }
 });
 
@@ -1826,41 +1809,6 @@ function submitForm() {
         console.warn('Supabase save failed:', err);
       }
     } catch(e) { console.warn('Could not save to Supabase', e); } })();
-    // Fire GHL webhook
-    (async () => {
-      try {
-        const a = app;
-        await fetch('https://services.leadconnectorhq.com/hooks/jlep72SieYHunxGEJWrI/webhook-trigger/67c0ef80-44bd-46d1-8004-7e74d7218999', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            first_name: a.a1?.firstName || '',
-            last_name: a.a1?.lastName || '',
-            email: a.a1?.email || '',
-            phone: a.a1?.mobile || '',
-            application_id: a.id,
-            loan_amount: a.loanAmount || '',
-            loan_duration: a.loanDuration || '',
-            finance_type: a.finType || '',
-            purpose: a.purpose || '',
-            asset_make: a.make || '',
-            asset_model: a.model || '',
-            asset_year: a.year || '',
-            address: a.a1?.street || '',
-            city: a.a1?.suburb || '',
-            state: a.a1?.state || '',
-            postal_code: a.a1?.postcode || '',
-            employment_status: a.a1?.empStatus || '',
-            employer: a.a1?.empName || '',
-            income: a.a1?.income || '',
-            submitted_at: a.submittedAt,
-            source: 'JLP Loan Application'
-          })
-        });
-      } catch(e) { console.warn('GHL webhook failed', e); }
-    })();
-
-
 
     // Fire GHL webhook
     (async () => {
@@ -1915,7 +1863,7 @@ function submitForm() {
       + '<p class="success-text">Thank you for completing your loan application. One of our team members will review your details and be in touch with you shortly.</p>'
       + '<div class="success-contact">'
       + '<strong style="color:var(--g900)">Questions? Contact us</strong><br>'
-      + '<a href="mailto:info&#64;jlpfinancial.com.au">info&#64;jlpfinancial.com.au</a> &middot; <a href="tel:0433773021">0433 773 021</a>'
+      + '<a href="mailto:info@jlpfinancial.com.au">info@jlpfinancial.com.au</a> &middot; <a href="tel:0433773021">0433 773 021</a>'
       + '</div>'
       + '</div>';
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1934,4 +1882,10 @@ function toggleCustomCb(cbId, boxId, checkId, fieldsId, rowId) {
 }
 
 function selectIncOpt(el, groupId) {
-  const parent = doc
+  const parent = document.getElementById(groupId);
+  parent.querySelectorAll('.ch').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+}
+</script>
+</body>
+</html>
