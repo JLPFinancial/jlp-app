@@ -2088,92 +2088,42 @@ function submitForm() {
       documents: uploadedDocs,
     };
 
-    // Save to Supabase (non-blocking)
-    (async () => { try {
-      const payload = {
-        app_id: app.id,
-        submitted_at: app.submittedAt,
-        status: app.status,
-        notes: app.notes,
-        purpose: app.purpose,
-        fin_type: app.finType,
-        applicant_type: app.applicantType,
-        loan_amount: app.loanAmount,
-        loan_duration: app.loanDuration,
-        balloon: app.balloon,
-        make: app.make,
-        model: app.model,
-        year: app.year,
-        rego: app.rego,
-        vin: app.vin,
-        condition: app.condition,
-        purchase_from: app.purchaseFrom,
-        a1: app.a1,
-        a2: app.a2,
-        biz: app.biz,
-        assets: app.assets,
-        liabilities: app.liabilities,
-        expenses: app.expenses,
-        documents: app.documents,
-      };
-      const res = await fetch('https://gxwwcrcllhaaoewgcbeo.supabase.co/rest/v1/applications', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4d3djcmNsbGhhYW9ld2djYmVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MjE4MTIsImV4cCI6MjA4ODA5NzgxMn0.twL-AmGGqfH29Nsl2p-Ezqi5zJ_h-3TOrguFAdjiET8',
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4d3djcmNsbGhhYW9ld2djYmVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MjE4MTIsImV4cCI6MjA4ODA5NzgxMn0.twL-AmGGqfH29Nsl2p-Ezqi5zJ_h-3TOrguFAdjiET8',
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify(payload)
-      });
-      if (!res.ok) {
-        const err = await res.text();
-        console.warn('Supabase save failed:', err);
-      }
-    } catch(e) { console.warn('Could not save to Supabase', e); } })();
-
-    // Fire GHL webhook
+    // Submit via edge function (handles Supabase save + GHL CRM, server-side — no CORS issues)
     (async () => {
       try {
-        const a = app;
-        const ghlPayload = {
-          // Contact info
-          first_name: a.a1?.firstName || '',
-          last_name: a.a1?.lastName || '',
-          email: a.a1?.email || '',
-          phone: a.a1?.mobile || '',
-          // Loan details
-          application_id: a.id,
-          loan_amount: a.loanAmount || '',
-          loan_duration: a.loanDuration || '',
-          finance_type: a.finType || '',
-          purpose: a.purpose || '',
-          // Asset
-          asset_make: a.make || '',
-          asset_model: a.model || '',
-          asset_year: a.year || '',
-          asset_condition: a.condition || '',
-          // Address
-          address: a.a1?.street || '',
-          city: a.a1?.suburb || '',
-          state: a.a1?.state || '',
-          postal_code: a.a1?.postcode || '',
-          // Employment
-          employment_status: a.a1?.empStatus || '',
-          employer: a.a1?.empName || '',
-          income: a.a1?.income || '',
-          // Meta
-          submitted_at: a.submittedAt,
-          source: 'JLP Loan Application'
+        const payload = {
+          app_id: app.id,
+          submitted_at: app.submittedAt,
+          status: app.status,
+          notes: app.notes,
+          purpose: app.purpose,
+          fin_type: app.finType,
+          finType: app.finType,
+          applicant_type: app.applicantType,
+          loan_amount: app.loanAmount,
+          loanAmount: app.loanAmount,
+          loan_duration: app.loanDuration,
+          loanDuration: app.loanDuration,
+          balloon: app.balloon,
+          make: app.make, model: app.model, year: app.year, rego: app.rego, vin: app.vin,
+          condition: app.condition,
+          purchase_from: app.purchaseFrom,
+          a1: app.a1, a2: app.a2, biz: app.biz,
+          assets: app.assets, liabilities: app.liabilities,
+          expenses: app.expenses, documents: app.documents,
         };
-        await fetch('https://services.leadconnectorhq.com/hooks/jlep72SieYHunxGEJWrI/webhook-trigger/9540405a-8276-4540-b43c-ef1a8c9487a7', {
+        const res = await fetch('https://gxwwcrcllhaaoewgcbeo.supabase.co/functions/v1/submit-application', {
           method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify(ghlPayload)
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4d3djcmNsbGhhYW9ld2djYmVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MjE4MTIsImV4cCI6MjA4ODA5NzgxMn0.twL-AmGGqfH29Nsl2p-Ezqi5zJ_h-3TOrguFAdjiET8',
+            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4d3djcmNsbGhhYW9ld2djYmVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MjE4MTIsImV4cCI6MjA4ODA5NzgxMn0.twL-AmGGqfH29Nsl2p-Ezqi5zJ_h-3TOrguFAdjiET8',
+          },
+          body: JSON.stringify(payload)
         });
-        console.log('GHL webhook fired');
-      } catch(e) { console.warn('GHL webhook failed', e); }
+        const result = await res.json().catch(() => ({}));
+        console.log('Submission result:', result);
+      } catch(e) { console.warn('Edge function call failed:', e); }
     })();
 
     document.querySelectorAll('#mainContent .section').forEach(s => s.style.display = 'none');
