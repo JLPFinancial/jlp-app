@@ -2175,9 +2175,11 @@ function submitForm() {
       } catch(e) { console.warn('GHL webhook failed', e); }
     })();
 
-    document.getElementById('mainContent').style.display = 'none';
+    document.querySelectorAll('#mainContent .section').forEach(s => s.style.display = 'none');
     const prog = document.querySelector('.progress-wrap');
     if (prog) prog.style.display = 'none';
+    buildDocs('1');
+    if (state.applicantType === 'co') { buildDocs('2'); document.getElementById('a2DocsCard').style.display = 'block'; }
     const screen = document.getElementById('successScreen');
     if (screen) screen.style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
