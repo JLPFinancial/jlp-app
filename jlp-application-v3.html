@@ -320,9 +320,6 @@ input[type=file] { display: none; }
 .switch input:checked + .slider { background: var(--blue); }
 .switch input:checked + .slider:before { transform: translateX(18px); }
 
-/* -- PRIVACY BOX -- */
-.privacy-box { background: var(--g50); border: 1px solid var(--g200); border-radius: var(--radius); padding: 14px 18px; font-size: 13px; color: var(--g500); line-height: 1.75; margin-bottom: 18px; }
-
 /* -- NAV -- */
 .nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--g200); }
 .btn { display: inline-flex; align-items: center; gap: 7px; padding: 11px 24px; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .13s; border: none; }
@@ -1135,37 +1132,7 @@ input[type=file] { display: none; }
   <div class="sec-header">
     <div class="sec-eye">Step 7 of 7</div>
     <div class="sec-title">Review & Submit</div>
-    <div class="sec-desc">Almost there — please read and confirm the privacy consent.</div>
-  </div>
-  <div class="card">
-    <div class="card-head"><div class="card-title">Privacy Consent</div></div>
-    <div class="card-body">
-      <div class="privacy-box">
-        By submitting this application, you authorise <strong>JLP Financial Pty Ltd</strong> to collect, use, and disclose your personal information for the purposes of assessing this loan application. After submission, you will receive an SMS with a link to sign the privacy consent form electronically.
-      </div>
-      <label class="toggle-row" id="consent1Row" onclick="toggleCustomCb('consent1','c1Box','c1Check',null,'consent1Row')">
-        <input type="checkbox" id="consent1">
-        <div class="custom-cb" id="c1Box">
-          <svg width="11" height="9" viewBox="0 0 11 9" fill="none" id="c1Check" style="display:none"><path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span class="toggle-text">
-          <strong id="consent1Name">Applicant 1</strong>
-          I acknowledge that I will receive an email to sign the privacy consent form and authorise the collection and use of my personal information.
-        </span>
-      </label>
-      <div id="consent2Block" style="display:none">
-        <label class="toggle-row" id="consent2Row" onclick="toggleCustomCb('consent2','c2Box','c2Check',null,'consent2Row')">
-          <input type="checkbox" id="consent2">
-          <div class="custom-cb" id="c2Box">
-            <svg width="11" height="9" viewBox="0 0 11 9" fill="none" id="c2Check" style="display:none"><path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <span class="toggle-text">
-            <strong id="consent2Name">Applicant 2</strong>
-            I acknowledge that I will receive an email to sign the privacy consent form and authorise the collection and use of my personal information.
-          </span>
-        </label>
-      </div>
-    </div>
+    <div class="sec-desc">Almost there — review your application and submit.</div>
   </div>
   <div class="nav-row">
     <button class="btn btn-ghost" onclick="prev()">← Back</button>
@@ -1374,7 +1341,6 @@ function selectApplicant(type, el) {
   document.getElementById('a2PersonalCard').style.display = isCo ? 'block' : 'none';
   document.getElementById('a2EmpCard').style.display = isCo ? 'block' : 'none';
   document.getElementById('a2FinanceSection').style.display = isCo ? 'block' : 'none';
-  document.getElementById('consent2Block').style.display = isCo ? 'block' : 'none';
   document.getElementById('a2DocsCard').style.display = isCo ? 'block' : 'none';
   if (isCo) buildDocs('2');
 }
@@ -1638,39 +1604,8 @@ function showToast(msg, duration = 3500) {
   setTimeout(() => t.classList.remove('show'), duration);
 }
 
-// --- CONSENT NAME SYNC ---
-document.addEventListener('input', e => {
-  if (e.target.id === 'a1FirstName' || e.target.id === 'a1LastName') {
-    const fn = document.getElementById('a1FirstName').value;
-    const ln = document.getElementById('a1LastName').value;
-    const name = [fn, ln].filter(Boolean).join(' ');
-    document.getElementById('consent1Name').textContent = name ? `Applicant 1 - ${name}` : 'Applicant 1';
-  }
-  if (e.target.id === 'a2FirstName' || e.target.id === 'a2LastName') {
-    const fn = document.getElementById('a2FirstName').value;
-    const ln = document.getElementById('a2LastName').value;
-    const name = [fn, ln].filter(Boolean).join(' ');
-    document.getElementById('consent2Name').textContent = name ? `Applicant 2 - ${name}` : 'Applicant 2';
-  }
-});
-
 // --- SUBMIT ---
 function submitForm() {
-  const consent1 = document.getElementById('consent1');
-  const consent2 = document.getElementById('consent2');
-  if (!consent1.checked) {
-    document.getElementById('consent1Row').style.borderColor = 'var(--red)';
-    showToast('! Applicant 1 must agree to the privacy consent');
-    setTimeout(() => document.getElementById('consent1Row').style.borderColor = '', 2500);
-    return;
-  }
-  if (state.applicantType === 'co' && !consent2.checked) {
-    document.getElementById('consent2Row').style.borderColor = 'var(--red)';
-    showToast('! Applicant 2 must agree to the privacy consent');
-    setTimeout(() => document.getElementById('consent2Row').style.borderColor = '', 2500);
-    return;
-  }
-
   const btn = document.getElementById('submitBtn');
   btn.textContent = 'Submitting...';
   btn.disabled = true;
