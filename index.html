@@ -2082,8 +2082,6 @@ function submitForm() {
 
     // Save to Supabase (non-blocking)
     (async () => { try {
-      const sig1Val = document.getElementById('sig1Input')?.value?.trim() || document.getElementById('docSig1')?.value?.trim() || '';
-      const sig2Val = document.getElementById('sig2Input')?.value?.trim() || document.getElementById('docSig2')?.value?.trim() || '';
       const payload = {
         app_id: app.id,
         submitted_at: app.submittedAt,
@@ -2109,11 +2107,6 @@ function submitForm() {
         liabilities: app.liabilities,
         expenses: app.expenses,
         documents: app.documents,
-        signature1: sig1Val,
-        signature1_date: window._sig1Date || fmtShortDate(),
-        signature2: sig2Val || null,
-        signature2_date: sig2Val ? (window._sig2Date || fmtShortDate()) : null,
-        signed_at: new Date().toISOString(),
       };
       const res = await fetch('https://gxwwcrcllhaaoewgcbeo.supabase.co/rest/v1/applications', {
         method: 'POST',
@@ -2130,42 +2123,6 @@ function submitForm() {
         console.warn('Supabase save failed:', err);
       }
     } catch(e) { console.warn('Could not save to Supabase', e); } })();
-
-    // Fire signing certificate generator (Cloudflare Worker)
-    (async () => {
-      try {
-        const now = new Date();
-        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        const sigDate = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-        const sigTs = fmtSigningDate();
-        const s1Name = document.getElementById('sig1Input')?.value?.trim() || app.a1?.firstName + ' ' + app.a1?.lastName;
-        const s1 = {
-          name: s1Name,
-          email: app.a1?.email || '',
-          mobile: app.a1?.mobile || '',
-          date: sigDate,
-          timestamp: sigTs,
-        };
-        const sigPayload = {
-          app_id: app.id,
-          form_type: app.purpose === 'business' ? 'commercial' : 'consumer',
-          signer1: s1,
-          signer2: state.applicantType === 'co' ? {
-            name: document.getElementById('sig2Input')?.value?.trim() || app.a2?.firstName + ' ' + app.a2?.lastName,
-            email: app.a2?.email || '',
-            mobile: app.a2?.mobile || '',
-            date: sigDate,
-            timestamp: sigTs,
-          } : null,
-        };
-        await fetch('https://jlp-signing.jlpfinancial.workers.dev/sign', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(sigPayload)
-        });
-        console.log('Signing cert triggered');
-      } catch(e) { console.warn('Signing cert trigger failed', e); }
-    })();
 
     // Fire GHL webhook
     (async () => {
