@@ -1318,39 +1318,34 @@ function populateConsentInfo() {
   if (msg) msg.style.display = 'none';
 }
 
-// PRIVACY_CONSENT_WEBHOOK_URL — replace with your GHL or external webhook endpoint
-const CONSENT_WEBHOOK_URL = 'PRIVACY_CONSENT_WEBHOOK_URL';
-
 // Consent form URLs by loan purpose
 const CONSENT_FORM_URLS = {
   personal: 'https://sendlink.co/documents/doc-form/69ab8f72a604692cf26a8967?locale=en-US',
   business: 'https://sendlink.co/documents/doc-form/69ab9a9f2de1a2178ba2c89a?locale=en-US'
 };
 
-async function sendConsentForm() {
+function sendConsentForm() {
+  const firstName = document.getElementById('a1FirstName')?.value || '';
+  const lastName  = document.getElementById('a1LastName')?.value  || '';
+  const email     = document.getElementById('a1Email')?.value     || '';
+  const consentUrl = CONSENT_FORM_URLS[state.purpose] || CONSENT_FORM_URLS.personal;
+
+  const subject = encodeURIComponent('Action Required: Privacy Consent Form – JLP Financial');
+  const body = encodeURIComponent(
+    'Hi ' + firstName + ',\n\n' +
+    'As part of your loan application with JLP Financial, we are required under Australian Privacy law ' +
+    'to obtain your written consent before submitting your application to credit providers.\n\n' +
+    'Please click the link below to review and sign your Privacy Consent Form:\n\n' +
+    consentUrl + '\n\n' +
+    'This should only take a minute to complete. Once signed, we can proceed with your application.\n\n' +
+    'If you have any questions, please don\'t hesitate to reach out.\n\n' +
+    'Kind regards,\nJLP Financial'
+  );
+
+  window.location.href = 'mailto:' + encodeURIComponent(email) +
+    '?subject=' + subject + '&body=' + body;
+
   const btn = document.getElementById('sendConsentBtn');
-  btn.textContent = 'Sending\u2026';
-  btn.disabled = true;
-  const consentUrl = CONSENT_FORM_URLS[state.purpose] || '';
-  const payload = {
-    first_name:       document.getElementById('a1FirstName')?.value || '',
-    last_name:        document.getElementById('a1LastName')?.value || '',
-    email:            document.getElementById('a1Email')?.value || '',
-    phone:            document.getElementById('a1Mobile')?.value || '',
-    sent_at:          new Date().toISOString(),
-    consent_form_url: consentUrl,
-    source:           'JLP Loan Application \u2013 Privacy Consent'
-  };
-  try {
-    await fetch(CONSENT_WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    console.log('Privacy consent webhook fired');
-  } catch(e) {
-    console.warn('Privacy consent webhook failed', e);
-  }
   btn.style.display = 'none';
   const msg = document.getElementById('consentSentMsg');
   if (msg) msg.style.display = 'flex';
