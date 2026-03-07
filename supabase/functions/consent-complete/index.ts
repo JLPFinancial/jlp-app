@@ -13,7 +13,9 @@
  *                              (create a new Workflow in GHL → Trigger: Inbound Webhook)
  */
 
-const GHL_CONSENT_WEBHOOK_URL = Deno.env.get("GHL_CONSENT_WEBHOOK_URL") ?? "";
+const GHL_CONSENT_WEBHOOK_URL =
+  Deno.env.get("GHL_CONSENT_WEBHOOK_URL") ??
+  "https://services.leadconnectorhq.com/hooks/jlep72SieYHunxGEJWrI/webhook-trigger/9697d49f-5d0e-409b-932a-ba10699435aa";
 
 Deno.serve(async (req: Request) => {
   // Health check
