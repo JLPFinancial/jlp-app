@@ -393,7 +393,7 @@ input[type=file] { display: none; }
     <div class="prog-step inactive" data-step="3" onclick="jumpStep(3)"><div class="prog-num">3</div><div class="prog-label">Applicants & Personal</div></div>
     <div class="prog-step inactive" data-step="4" id="progEmployment" onclick="jumpStep(4)"><div class="prog-num">4</div><div class="prog-label" id="progEmpLabel">Employment</div></div>
     <div class="prog-step inactive" data-step="5" onclick="jumpStep(5)"><div class="prog-num">5</div><div class="prog-label">Finances</div></div>
-    <div class="prog-step inactive" data-step="6" onclick="jumpStep(6)"><div class="prog-num">6</div><div class="prog-label">Documents</div></div>
+    <div class="prog-step inactive" data-step="6" onclick="jumpStep(6)"><div class="prog-num">6</div><div class="prog-label">Privacy Consent</div></div>
     <div class="prog-step inactive" data-step="7" onclick="jumpStep(7)"><div class="prog-num">7</div><div class="prog-label">Submit</div></div>
   </div>
 </div>
@@ -1132,31 +1132,29 @@ input[type=file] { display: none; }
   </div>
 </div>
 
-<!-- ==== STEP 7 – DOCUMENTS ==== -->
+<!-- ==== STEP 6 – PRIVACY CONSENT ==== -->
 <div class="section" id="step-6">
   <div class="sec-header">
     <div class="sec-eye">Step 6 of 7</div>
-    <div class="sec-title">Supporting Documents</div>
-    <div class="sec-desc">Upload below, or text/email documents directly if easier.</div>
+    <div class="sec-title">Privacy Consent</div>
+    <div class="sec-desc">We'll send you a privacy consent form before submitting your application to lenders.</div>
   </div>
   <div class="card">
-    <div class="card-head"><div class="card-title">Applicant 1 – Documents</div></div>
+    <div class="card-head"><div class="card-title">Send Consent Form</div></div>
     <div class="card-body">
-      <div style="font-size:13px;color:var(--g500);margin-bottom:16px;padding:10px 14px;background:var(--g50);border-radius:8px;border:1px solid var(--g200)">
-         Text or email documents to <a href="tel:0433773021" style="color:var(--blue);font-weight:600">0433 773 021</a> or <a href="/cdn-cgi/l/email-protection#7910171f16391315091f101718171a101815571a161457180c" style="color:var(--blue);font-weight:600">info&#64;jlpfinancial&#46;com&#46;au</a>
+      <p style="font-size:14px;color:var(--g600);line-height:1.7;margin:0 0 16px">Under Australian Privacy law, we're required to obtain your written consent before submitting your application to credit providers. Click below and we'll send a privacy consent form to your email and mobile number on file.</p>
+      <div id="consentContactInfo" style="background:var(--g50);border:1px solid var(--g200);border-radius:10px;padding:14px 16px;margin-bottom:12px;font-size:13px;color:var(--g700);line-height:1.8"></div>
+      <div id="consentDirectLink" style="display:none;margin-bottom:16px;padding:14px 16px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;font-size:13px;color:var(--g700)"></div>
+      <button class="btn btn-primary" id="sendConsentBtn" onclick="sendConsentForm()" style="width:100%">Send Consent Form</button>
+      <div id="consentSentMsg" style="display:none;margin-top:16px;padding:14px 16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;font-size:13px;color:#166534;align-items:center;gap:10px">
+        <span style="font-size:18px">&#10003;</span>
+        <span>Consent form sent! Please check your email and SMS. You can continue while you wait.</span>
       </div>
-      <div id="docList1"><!-- rendered by JS --></div>
-    </div>
-  </div>
-  <div id="a2DocsCard" class="card" style="display:none">
-    <div class="card-head"><div class="card-title">Applicant 2 – Documents</div></div>
-    <div class="card-body">
-      <div id="docList2"></div>
     </div>
   </div>
   <div class="nav-row">
-    <button class="btn btn-ghost" onclick="prev()">← Back</button>
-    <button class="btn btn-primary" onclick="next()">Continue →</button>
+    <button class="btn btn-ghost" onclick="prev()">&#8592; Back</button>
+    <button class="btn btn-primary" onclick="next()">Continue &#8594;</button>
   </div>
 </div>
 
@@ -1183,11 +1181,40 @@ input[type=file] { display: none; }
 <div id="successScreen" style="display:none">
   <div class="success-card">
     <div class="success-icon">✓</div>
-    <div class="success-title">Application Submitted!</div>
-    <p class="success-text">Thank you for completing your loan application. One of our team members will review your details and be in touch shortly.</p>
+    <div class="success-title">Thank You for Your Submission!</div>
+    <p class="success-text">Your loan application has been received. Our team will review your details and be in touch with you shortly to discuss next steps.</p>
+    <div style="display:flex;flex-direction:column;gap:8px;margin:24px 0;padding:20px;background:var(--g50);border-radius:10px;border:1px solid var(--g200)">
+      <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--g400);margin-bottom:4px">What happens next</div>
+      <div style="font-size:13px;color:var(--g700);display:flex;align-items:flex-start;gap:10px;text-align:left"><span style="color:var(--gold);font-weight:700;flex-shrink:0">1.</span> Our team reviews your application</div>
+      <div style="font-size:13px;color:var(--g700);display:flex;align-items:flex-start;gap:10px;text-align:left"><span style="color:var(--gold);font-weight:700;flex-shrink:0">2.</span> We'll contact you within 1 business day</div>
+      <div style="font-size:13px;color:var(--g700);display:flex;align-items:flex-start;gap:10px;text-align:left"><span style="color:var(--gold);font-weight:700;flex-shrink:0">3.</span> We'll discuss your finance options &amp; next steps</div>
+    </div>
     <div class="success-contact">
-      <strong style="color:var(--g900)">Questions? Contact us</strong><br>
-      <a href="/cdn-cgi/l/email-protection#2d44434b426d47415d4b44434c434e444c41034e4240034c58" style="color:var(--blue)">info&#64;jlpfinancial&#46;com&#46;au</a> · <a href="tel:0433773021">0433 773 021</a>
+      <strong style="color:var(--g900)">Questions? We're here to help</strong><br>
+      <a href="mailto:info@jlpfinancial.com.au">info@jlpfinancial.com.au</a> &nbsp;·&nbsp; <a href="tel:0433773021">0433 773 021</a>
+    </div>
+  </div>
+
+  <!-- Documents section (shown after submission) -->
+  <div style="max-width:560px;margin:0 auto 40px">
+    <div class="sec-header" style="padding-top:8px">
+      <div class="sec-title">Supporting Documents</div>
+      <div class="sec-desc">Upload below, or text/email documents directly if easier.</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-title">Applicant 1 – Documents</div></div>
+      <div class="card-body">
+        <div style="font-size:13px;color:var(--g500);margin-bottom:16px;padding:10px 14px;background:var(--g50);border-radius:8px;border:1px solid var(--g200)">
+          Text or email documents to <a href="tel:0433773021" style="color:var(--blue);font-weight:600">0433 773 021</a> or <a href="mailto:info@jlpfinancial.com.au" style="color:var(--blue);font-weight:600">info@jlpfinancial.com.au</a>
+        </div>
+        <div id="docList1"><!-- rendered by JS --></div>
+      </div>
+    </div>
+    <div id="a2DocsCard" class="card" style="display:none">
+      <div class="card-head"><div class="card-title">Applicant 2 – Documents</div></div>
+      <div class="card-body">
+        <div id="docList2"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -1257,7 +1284,76 @@ function goTo(n) {
   state.step = n;
   document.getElementById('step-' + n).classList.add('active');
   updateProgress();
+  if (n === 6) populateConsentInfo();
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function populateConsentInfo() {
+  const firstName = document.getElementById('a1FirstName')?.value || '';
+  const lastName  = document.getElementById('a1LastName')?.value || '';
+  const email     = document.getElementById('a1Email')?.value || '';
+  const phone     = document.getElementById('a1Mobile')?.value || '';
+  const el = document.getElementById('consentContactInfo');
+  if (!el) return;
+  el.innerHTML =
+    '<strong style="display:block;margin-bottom:6px;color:var(--g900)">Sending to:</strong>'
+    + ((firstName || lastName) ? `<div>${firstName} ${lastName}</div>` : '')
+    + (email ? `<div>&#9993; ${email}</div>` : '<div style="color:var(--g400)">No email on file</div>')
+    + (phone ? `<div>&#128241; ${phone}</div>` : '<div style="color:var(--g400)">No phone on file</div>');
+  // Show direct link for personal loans
+  const linkEl = document.getElementById('consentDirectLink');
+  if (linkEl) {
+    const consentUrl = CONSENT_FORM_URLS[state.purpose] || '';
+    if (consentUrl) {
+      linkEl.style.display = 'block';
+      linkEl.innerHTML = 'You can also complete the form directly: <a href="' + consentUrl + '" target="_blank" rel="noopener" style="color:var(--blue);font-weight:600;text-decoration:none">Open Privacy Consent Form &#8599;</a>';
+    } else {
+      linkEl.style.display = 'none';
+    }
+  }
+  // Reset button state in case user navigates back
+  const btn = document.getElementById('sendConsentBtn');
+  const msg = document.getElementById('consentSentMsg');
+  if (btn) { btn.textContent = 'Send Consent Form'; btn.disabled = false; btn.style.display = ''; }
+  if (msg) msg.style.display = 'none';
+}
+
+// PRIVACY_CONSENT_WEBHOOK_URL — replace with your GHL or external webhook endpoint
+const CONSENT_WEBHOOK_URL = 'PRIVACY_CONSENT_WEBHOOK_URL';
+
+// Consent form URLs by loan purpose
+const CONSENT_FORM_URLS = {
+  personal: 'https://sendlink.co/documents/doc-form/69ab8f72a604692cf26a8967?locale=en-US',
+  business: '' // add business consent form URL here when available
+};
+
+async function sendConsentForm() {
+  const btn = document.getElementById('sendConsentBtn');
+  btn.textContent = 'Sending\u2026';
+  btn.disabled = true;
+  const consentUrl = CONSENT_FORM_URLS[state.purpose] || '';
+  const payload = {
+    first_name:       document.getElementById('a1FirstName')?.value || '',
+    last_name:        document.getElementById('a1LastName')?.value || '',
+    email:            document.getElementById('a1Email')?.value || '',
+    phone:            document.getElementById('a1Mobile')?.value || '',
+    sent_at:          new Date().toISOString(),
+    consent_form_url: consentUrl,
+    source:           'JLP Loan Application \u2013 Privacy Consent'
+  };
+  try {
+    await fetch(CONSENT_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    console.log('Privacy consent webhook fired');
+  } catch(e) {
+    console.warn('Privacy consent webhook failed', e);
+  }
+  btn.style.display = 'none';
+  const msg = document.getElementById('consentSentMsg');
+  if (msg) msg.style.display = 'flex';
 }
 
 function updateProgress() {
@@ -1912,19 +2008,11 @@ function submitForm() {
       } catch(e) { console.warn('GHL webhook failed', e); }
     })();
 
-    document.getElementById('mainContent').innerHTML = '';
+    document.getElementById('mainContent').style.display = 'none';
     const prog = document.querySelector('.progress-wrap');
     if (prog) prog.style.display = 'none';
-    document.getElementById('mainContent').innerHTML =
-      '<div class="success-card">'
-      + '<div class="success-icon">&#10003;</div>'
-      + '<div class="success-title">Application Submitted!</div>'
-      + '<p class="success-text">Thank you for completing your loan application. One of our team members will review your details and be in touch with you shortly.</p>'
-      + '<div class="success-contact">'
-      + '<strong style="color:var(--g900)">Questions? Contact us</strong><br>'
-      + '<a href="tel:0433773021">info@jlpfinancial.com.au</a> &middot; <a href="tel:0433773021">0433 773 021</a>'
-      + '</div>'
-      + '</div>';
+    const screen = document.getElementById('successScreen');
+    if (screen) screen.style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, 1200);
 }
