@@ -1143,7 +1143,8 @@ input[type=file] { display: none; }
     <div class="card-head"><div class="card-title">Send Consent Form</div></div>
     <div class="card-body">
       <p style="font-size:14px;color:var(--g600);line-height:1.7;margin:0 0 16px">Under Australian Privacy law, we're required to obtain your written consent before submitting your application to credit providers. Click below and we'll send a privacy consent form to your email and mobile number on file.</p>
-      <div id="consentContactInfo" style="background:var(--g50);border:1px solid var(--g200);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--g700);line-height:1.8"></div>
+      <div id="consentContactInfo" style="background:var(--g50);border:1px solid var(--g200);border-radius:10px;padding:14px 16px;margin-bottom:12px;font-size:13px;color:var(--g700);line-height:1.8"></div>
+      <div id="consentDirectLink" style="display:none;margin-bottom:16px;padding:14px 16px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;font-size:13px;color:var(--g700)"></div>
       <button class="btn btn-primary" id="sendConsentBtn" onclick="sendConsentForm()" style="width:100%">Send Consent Form</button>
       <div id="consentSentMsg" style="display:none;margin-top:16px;padding:14px 16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;font-size:13px;color:#166534;align-items:center;gap:10px">
         <span style="font-size:18px">&#10003;</span>
@@ -1299,6 +1300,17 @@ function populateConsentInfo() {
     + ((firstName || lastName) ? `<div>${firstName} ${lastName}</div>` : '')
     + (email ? `<div>&#9993; ${email}</div>` : '<div style="color:var(--g400)">No email on file</div>')
     + (phone ? `<div>&#128241; ${phone}</div>` : '<div style="color:var(--g400)">No phone on file</div>');
+  // Show direct link for personal loans
+  const linkEl = document.getElementById('consentDirectLink');
+  if (linkEl) {
+    const consentUrl = CONSENT_FORM_URLS[state.purpose] || '';
+    if (consentUrl) {
+      linkEl.style.display = 'block';
+      linkEl.innerHTML = 'You can also complete the form directly: <a href="' + consentUrl + '" target="_blank" rel="noopener" style="color:var(--blue);font-weight:600;text-decoration:none">Open Privacy Consent Form &#8599;</a>';
+    } else {
+      linkEl.style.display = 'none';
+    }
+  }
   // Reset button state in case user navigates back
   const btn = document.getElementById('sendConsentBtn');
   const msg = document.getElementById('consentSentMsg');
@@ -1309,17 +1321,25 @@ function populateConsentInfo() {
 // PRIVACY_CONSENT_WEBHOOK_URL — replace with your GHL or external webhook endpoint
 const CONSENT_WEBHOOK_URL = 'PRIVACY_CONSENT_WEBHOOK_URL';
 
+// Consent form URLs by loan purpose
+const CONSENT_FORM_URLS = {
+  personal: 'https://sendlink.co/documents/doc-form/69ab8f72a604692cf26a8967?locale=en-US',
+  business: '' // add business consent form URL here when available
+};
+
 async function sendConsentForm() {
   const btn = document.getElementById('sendConsentBtn');
   btn.textContent = 'Sending\u2026';
   btn.disabled = true;
+  const consentUrl = CONSENT_FORM_URLS[state.purpose] || '';
   const payload = {
-    first_name: document.getElementById('a1FirstName')?.value || '',
-    last_name:  document.getElementById('a1LastName')?.value || '',
-    email:      document.getElementById('a1Email')?.value || '',
-    phone:      document.getElementById('a1Mobile')?.value || '',
-    sent_at:    new Date().toISOString(),
-    source:     'JLP Loan Application \u2013 Privacy Consent'
+    first_name:       document.getElementById('a1FirstName')?.value || '',
+    last_name:        document.getElementById('a1LastName')?.value || '',
+    email:            document.getElementById('a1Email')?.value || '',
+    phone:            document.getElementById('a1Mobile')?.value || '',
+    sent_at:          new Date().toISOString(),
+    consent_form_url: consentUrl,
+    source:           'JLP Loan Application \u2013 Privacy Consent'
   };
   try {
     await fetch(CONSENT_WEBHOOK_URL, {
