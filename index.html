@@ -2112,7 +2112,7 @@ function submitForm() {
           assets: app.assets, liabilities: app.liabilities,
           expenses: app.expenses, documents: app.documents,
         };
-        const res = await fetch('https://gxwwcrcllhaaoewgcbeo.supabase.co/functions/v1/submit-application', {
+        const res = await fetch('https://gxwwcrcllhaaoewgcbeo.supabase.co/functions/v1/super-handler', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
