@@ -320,9 +320,6 @@ input[type=file] { display: none; }
 .switch input:checked + .slider { background: var(--blue); }
 .switch input:checked + .slider:before { transform: translateX(18px); }
 
-/* -- PRIVACY BOX -- */
-.privacy-box { background: var(--g50); border: 1px solid var(--g200); border-radius: var(--radius); padding: 14px 18px; font-size: 13px; color: var(--g500); line-height: 1.75; margin-bottom: 18px; }
-
 /* -- NAV -- */
 .nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--g200); }
 .btn { display: inline-flex; align-items: center; gap: 7px; padding: 11px 24px; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .13s; border: none; }
@@ -527,29 +524,6 @@ input[type=file] { display: none; }
 .doc-sig-name-input:focus { border-bottom-color: var(--navy); }
 .doc-sig-date-val { font-size: 13px; color: var(--g700); font-weight: 500; padding: 4px 0; }
 .doc-sig-meta { font-size: 10.5px; color: var(--g500); display: flex; align-items: center; gap: 5px; margin-top: 6px; }
-.doc-sig-consent-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  background: white;
-  border: 1px solid var(--g200);
-  border-radius: 8px;
-  padding: 12px 14px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: border-color .2s, background .2s;
-}
-.doc-sig-consent-row.on { border-color: var(--navy); background: #f0f4ff; }
-.doc-sig-consent-box {
-  width: 18px; height: 18px; min-width: 18px;
-  border: 2px solid var(--g300);
-  border-radius: 4px;
-  margin-top: 1px;
-  display: flex; align-items: center; justify-content: center;
-  transition: all .2s;
-}
-.doc-sig-consent-row.on .doc-sig-consent-box { background: var(--navy); border-color: var(--navy); }
-.doc-sig-consent-text { font-size: 12px; color: var(--g700); line-height: 1.55; }
 .doc-sig-applicant2 { margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--g200); }
 /* scrollbar styling */
 .doc-viewer-wrap::-webkit-scrollbar { width: 6px; }
