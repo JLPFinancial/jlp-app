@@ -1519,32 +1519,6 @@ function selectPurpose(p) {
   document.getElementById('a1EmpCard').style.display = p === 'business' ? 'none' : 'block';
   // Expenses only for personal
   document.getElementById('expCard').style.display = p === 'personal' ? 'block' : 'none';
-  // Switch PDF iframe based on purpose
-  const consumerFrame = document.getElementById('consumerPdfFrame');
-  const commercialFrame = document.getElementById('commercialPdfFrame');
-  if (consumerFrame) consumerFrame.style.display = p === 'personal' ? 'block' : 'none';
-  if (commercialFrame) commercialFrame.style.display = p === 'business' ? 'block' : 'none';
-  const docTabLabel = document.getElementById('docTabLabel');
-  if (docTabLabel) docTabLabel.innerHTML = p === 'business'
-    ? 'COMMERCIAL PRIVACY DISCLOSURE &amp; CONSENT'
-    : 'CREDIT GUIDE &amp; CONSUMER PRIVACY CONSENT';
-  const consentLbl = document.getElementById('docConsentLabel');
-  if (consentLbl) consentLbl.textContent = p === 'business'
-    ? 'I have read and understood the Privacy Disclosure Statement & Consent (Commercial) and authorise JLP Financial Pty Ltd to obtain a credit report on my behalf.'
-    : 'I have read and understood the Credit Guide & Privacy Disclosure Statement and authorise JLP Financial Pty Ltd to collect, use and disclose my personal information and obtain a credit report on my behalf.';
-  if (typeof loadPdf === 'function') loadPdf(p === 'business' ? 'business' : 'personal');
-  // Update sig alert and consent labels
-  const sigAlert = document.getElementById('sigAlertText');
-  if (sigAlert) sigAlert.textContent = p === 'business'
-    ? 'By typing your full name below, you confirm you have read the Privacy Disclosure Statement & Consent and agree to all terms including Part B.'
-    : 'By typing your full name below, you confirm you have read the Credit Guide and Privacy Disclosure Statement and agree to all terms including Part C (origination fee).';
-  const consentLabelText = p === 'business'
-    ? 'I have read and understood the Privacy Disclosure Statement & Consent (Commercial). I authorise JLP Financial Pty Ltd to collect, use and disclose my personal and commercial information as described, and to obtain a credit report on my behalf.'
-    : 'I have read and understood the Credit Guide and Privacy Disclosure Statement. I authorise JLP Financial Pty Ltd to collect, use and disclose my personal information as described, and to obtain a credit report on my behalf.';
-  const cl1 = document.getElementById('consentLabel1');
-  const cl2 = document.getElementById('consentLabel2');
-  if (cl1) cl1.textContent = consentLabelText;
-  if (cl2) cl2.textContent = consentLabelText;
   // Docs update
   buildDocs('1');
 }
