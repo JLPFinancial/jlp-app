@@ -1604,22 +1604,6 @@ function showToast(msg, duration = 3500) {
   setTimeout(() => t.classList.remove('show'), duration);
 }
 
-// --- CONSENT NAME SYNC ---
-document.addEventListener('input', e => {
-  if (e.target.id === 'a1FirstName' || e.target.id === 'a1LastName') {
-    const fn = document.getElementById('a1FirstName').value;
-    const ln = document.getElementById('a1LastName').value;
-    const name = [fn, ln].filter(Boolean).join(' ');
-    document.getElementById('consent1Name').textContent = name ? `Applicant 1 - ${name}` : 'Applicant 1';
-  }
-  if (e.target.id === 'a2FirstName' || e.target.id === 'a2LastName') {
-    const fn = document.getElementById('a2FirstName').value;
-    const ln = document.getElementById('a2LastName').value;
-    const name = [fn, ln].filter(Boolean).join(' ');
-    document.getElementById('consent2Name').textContent = name ? `Applicant 2 - ${name}` : 'Applicant 2';
-  }
-});
-
 // --- SUBMIT ---
 function submitForm() {
   const consent1 = document.getElementById('consent1');
