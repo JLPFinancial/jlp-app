@@ -1606,21 +1606,6 @@ function showToast(msg, duration = 3500) {
 
 // --- SUBMIT ---
 function submitForm() {
-  const consent1 = document.getElementById('consent1');
-  const consent2 = document.getElementById('consent2');
-  if (!consent1.checked) {
-    document.getElementById('consent1Row').style.borderColor = 'var(--red)';
-    showToast('! Applicant 1 must agree to the privacy consent');
-    setTimeout(() => document.getElementById('consent1Row').style.borderColor = '', 2500);
-    return;
-  }
-  if (state.applicantType === 'co' && !consent2.checked) {
-    document.getElementById('consent2Row').style.borderColor = 'var(--red)';
-    showToast('! Applicant 2 must agree to the privacy consent');
-    setTimeout(() => document.getElementById('consent2Row').style.borderColor = '', 2500);
-    return;
-  }
-
   const btn = document.getElementById('submitBtn');
   btn.textContent = 'Submitting...';
   btn.disabled = true;
