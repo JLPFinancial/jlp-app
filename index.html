@@ -1977,69 +1977,7 @@ function onSigInput(n) {
   }
 }
 
-function toggleSigConsent(n) {
-  const cb = document.getElementById('consent'+n);
-  const row = document.getElementById('consent'+n+'Row');
-  const box = document.getElementById('c'+n+'Box');
-  const check = document.getElementById('c'+n+'Check');
-  cb.checked = !cb.checked;
-  if (cb.checked) {
-    row.classList.add('ticked');
-    row.classList.add('on');
-    if (box) { box.style.background = '#16a34a'; box.style.borderColor = '#16a34a'; }
-    if (check) check.style.display = 'block';
-  } else {
-    row.classList.remove('ticked');
-    row.classList.remove('on');
-    if (box) { box.style.background = ''; box.style.borderColor = ''; }
-    if (check) check.style.display = 'none';
-  }
-}
-
 function submitForm() {
-  // Bridge PDF overlay signatures → legacy sig inputs (so validation & submission works)
-  const docSig1El = document.getElementById('docSig1');
-  const docSig2El = document.getElementById('docSig2');
-  const sig1LegacyEl = document.getElementById('sig1Input');
-  const sig2LegacyEl = document.getElementById('sig2Input');
-  if (docSig1El && docSig1El.value.trim() && sig1LegacyEl && !sig1LegacyEl.value.trim()) {
-    sig1LegacyEl.value = docSig1El.value.trim();
-    onSigInput(1);
-  }
-  if (docSig2El && docSig2El.value.trim() && sig2LegacyEl && !sig2LegacyEl.value.trim()) {
-    sig2LegacyEl.value = docSig2El.value.trim();
-    onSigInput(2);
-  }
-  // Also bridge doc consent checkbox
-  if (_docConsentOn && document.getElementById('consent1') && !document.getElementById('consent1').checked) {
-    document.getElementById('consent1').checked = true;
-    const row = document.getElementById('consent1Row');
-    if (row) { row.classList.add('ticked','on'); }
-    const box = document.getElementById('c1Box'); const check = document.getElementById('c1Check');
-    if (box) { box.style.background='#16a34a'; box.style.borderColor='#16a34a'; }
-    if (check) check.style.display='block';
-  }
-
-  const sig1 = document.getElementById('sig1Input')?.value?.trim() || document.getElementById('docSig1')?.value?.trim();
-  const sig2 = document.getElementById('sig2Input')?.value?.trim() || document.getElementById('docSig2')?.value?.trim();
-
-  if (!sig1) {
-    showToast('⚠ Please type your full name to sign before submitting');
-    const sigPanel = document.getElementById('docSig1');
-    if (sigPanel) { sigPanel.focus(); sigPanel.closest('div').style.borderBottom = '2px solid var(--red)'; setTimeout(() => sigPanel.closest('div').style.borderBottom = '', 2500); }
-    return;
-  }
-  if (!_docConsentOn) {
-    const row = document.getElementById('docConsentRow');
-    if (row) { row.style.borderColor = 'var(--red)'; row.style.background = '#fef2f2'; setTimeout(() => { row.style.borderColor = '#e2e8f0'; row.style.background = '#f8fafc'; }, 2500); }
-    showToast('⚠ Please tick the Declaration & Consent checkbox');
-    return;
-  }
-  if (state.applicantType === 'co' && !sig2) {
-    showToast('⚠ Applicant 2 must type their full name to sign');
-    return;
-  }
-
   const btn = document.getElementById('submitBtn');
   btn.textContent = 'Submitting...';
   btn.disabled = true;
