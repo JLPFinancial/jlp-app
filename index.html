@@ -1947,37 +1947,6 @@ function showToast(msg, duration = 3500) {
   setTimeout(() => t.classList.remove('show'), duration);
 }
 
-// --- CONSENT NAME SYNC ---
-document.addEventListener('input', e => {
-  if (e.target.id === 'a1FirstName' || e.target.id === 'a1LastName') {
-    const fn = document.getElementById('a1FirstName').value;
-    const ln = document.getElementById('a1LastName').value;
-    const name = [fn, ln].filter(Boolean).join(' ');
-    document.getElementById('consent1Name').textContent = name ? 'Applicant 1 – ' + name : 'Applicant 1';
-    document.getElementById('sigCard1Name').textContent = name || '';
-    const sigIn = document.getElementById('sig1Input');
-    if (sigIn && !sigIn.value && name) { sigIn.value = name; onSigInput(1); }
-  }
-  if (e.target.id === 'a2FirstName' || e.target.id === 'a2LastName') {
-    const fn2 = document.getElementById('a2FirstName') ? document.getElementById('a2FirstName').value : '';
-    const ln2 = document.getElementById('a2LastName') ? document.getElementById('a2LastName').value : '';
-    const name2 = [fn2, ln2].filter(Boolean).join(' ');
-    document.getElementById('consent2Name').textContent = name2 ? 'Applicant 2 – ' + name2 : 'Applicant 2';
-    document.getElementById('sigCard2Name').textContent = name2 || '';
-    const sigIn2 = document.getElementById('sig2Input');
-    if (sigIn2 && !sigIn2.value && name2) { sigIn2.value = name2; onSigInput(2); }
-  }
-});
-
-// Show/hide sig card 2 when co-borrower toggled
-function updateSigCard2Visibility() {
-  const wrap = document.getElementById('sigCard2Wrap');
-  const block = document.getElementById('consent2Block');
-  const isCo = state.applicantType === 'co';
-  if (wrap) wrap.style.display = isCo ? 'block' : 'none';
-  if (block) block.style.display = isCo ? 'block' : 'none';
-}
-
 // --- SUBMIT ---
 // --- SIGNATURE HELPERS ---
 function fmtSigningDate() {
