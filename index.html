@@ -1390,51 +1390,13 @@ input[type=file] { display: none; }
 <div class="section" id="step-7">
   <div class="sec-header">
     <div class="sec-eye">Step 7 of 7</div>
-    <div class="sec-title">Review &amp; Sign</div>
-    <div class="sec-desc">Scroll through the document and sign in the highlighted fields below.</div>
-  </div>
-
-  <div class="card" style="padding:0;overflow:hidden">
-    <!-- Header bar -->
-    <div style="background:var(--navy);padding:10px 18px;display:flex;align-items:center;justify-content:space-between">
-      <div style="display:flex;align-items:center;gap:8px">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        <span id="docTabLabel" style="color:white;font-size:12px;font-weight:700;letter-spacing:.4px">CREDIT GUIDE &amp; CONSUMER PRIVACY CONSENT</span>
-      </div>
-      <span id="docPageCount" style="font-size:10px;color:rgba(255,255,255,.55)">—</span>
-    </div>
-
-    <!-- PDF pages rendered as canvases with overlaid signature fields -->
-    <div id="pdfScrollContainer" style="background:#525659;overflow-y:auto;max-height:75vh;padding:16px 0">
-      <div id="pdfLoading" style="color:white;text-align:center;padding:60px;font-size:13px">Loading document...</div>
-      <div id="pdfPagesContainer"></div>
-    </div>
-  </div>
-
-  <!-- Consent checkbox — lives outside the PDF scroll container so clicks always register -->
-  <div class="card" style="margin-top:12px">
-    <div class="card-body">
-      <div id="docConsentRow" onclick="toggleDocConsent()" style="display:flex;align-items:flex-start;gap:14px;cursor:pointer;padding:16px;background:#f8fafc;border-radius:10px;border:2px solid #e2e8f0;transition:border-color .15s,background .15s;user-select:none">
-        <div id="docConsentBox2" style="width:22px;height:22px;min-width:22px;border:2px solid #cbd5e1;border-radius:5px;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .15s;flex-shrink:0">
-          <svg id="docConsentCheck2" width="13" height="11" viewBox="0 0 11 9" fill="none" style="display:none"><path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:3px">Declaration &amp; Consent</div>
-          <div id="docConsentLabel" style="font-size:13px;color:var(--g600);line-height:1.6">I have read and understood the Credit Guide &amp; Privacy Disclosure Statement and authorise JLP Financial Pty Ltd to collect, use and disclose my personal information and obtain a credit report on my behalf.</div>
-        </div>
-      </div>
-    </div>
+    <div class="sec-title">Review &amp; Submit</div>
+    <div class="sec-desc">Almost there — review your application and submit.</div>
   </div>
 
   <div class="nav-row">
     <button class="btn btn-ghost" onclick="prev()">&#8592; Back</button>
-    <div style="display:flex;gap:10px;align-items:center">
-      <button class="btn btn-primary" id="finishSignBtn" onclick="finishSigning()" style="display:none">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
-        Finish Signing
-      </button>
-      <button class="btn btn-gold" id="submitBtn" onclick="submitForm()">Submit Application</button>
-    </div>
+    <button class="btn btn-gold" id="submitBtn" onclick="submitForm()">Submit Application</button>
   </div>
   <div class="google-row">
     <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M24 9.5c3.9 0 6.5 1.7 8 3.1l5.9-5.9C34.3 3.4 29.7 1 24 1 14.8 1 7 6.7 3.8 14.7l6.9 5.3C12.4 13.8 17.7 9.5 24 9.5z"/><path fill="#34A853" d="M46.1 24.5c0-1.6-.1-2.8-.4-4H24v7.6h12.5c-.6 3-2.4 5.5-5 7.2l7.8 6c4.6-4.2 7.8-10.5 7.8-16.8z"/><path fill="#FBBC05" d="M10.7 28.6A15 15 0 0 1 9.5 24c0-1.6.3-3.2.8-4.6l-6.9-5.3A23 23 0 0 0 1 24c0 3.7.9 7.2 2.4 10.3l7.3-5.7z"/><path fill="#EA4335" d="M24 47c5.7 0 10.5-1.9 14-5.1l-7.8-6C28.3 37.4 26.3 38 24 38c-6.3 0-11.6-4.3-13.4-10L3.4 33.7C6.6 41.3 14.8 47 24 47z"/></svg>
