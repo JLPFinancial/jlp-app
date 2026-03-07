@@ -2168,7 +2168,8 @@ function submitForm() {
         };
         await fetch('https://services.leadconnectorhq.com/hooks/jlep72SieYHunxGEJWrI/webhook-trigger/9540405a-8276-4540-b43c-ef1a8c9487a7', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify(ghlPayload)
         });
         console.log('GHL webhook fired');
