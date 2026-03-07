@@ -367,8 +367,21 @@ input[type=file] { display: none; }
 .other-doc-modal-title{font-size:16px;font-weight:800;color:var(--navy);margin-bottom:6px}
 .other-doc-modal-sub{font-size:13px;color:var(--g500);margin-bottom:18px}
 
+/* -- REVIEW PAGE -- */
+.rv-card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 16px; overflow: hidden; }
+.rv-card-head { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid var(--g200); background: var(--g50); }
+.rv-card-title { font-weight: 700; font-size: 11px; color: var(--g900); letter-spacing: .8px; text-transform: uppercase; }
+.rv-edit-btn { font-size: 11px; color: var(--blue); background: none; border: 1px solid var(--g300); border-radius: 6px; padding: 4px 12px; cursor: pointer; font-weight: 600; transition: all .15s; }
+.rv-edit-btn:hover { border-color: var(--blue); background: var(--blue); color: white; }
+.rv-card-body { padding: 0; }
+.rv-row { display: flex; padding: 9px 20px; border-bottom: 1px solid var(--g100); gap: 12px; align-items: flex-start; }
+.rv-row:last-child { border-bottom: none; }
+.rv-label { font-size: 12px; color: var(--g500); min-width: 155px; flex-shrink: 0; padding-top: 1px; }
+.rv-value { font-size: 13px; color: var(--g900); font-weight: 500; flex: 1; }
+.rv-sub-head { padding: 8px 20px 6px; font-size: 10px; font-weight: 700; color: var(--g400); text-transform: uppercase; letter-spacing: 1.2px; border-bottom: 1px solid var(--g100); background: var(--g50); }
 
 </style>
+
 </head>
 <body>
 
@@ -1166,6 +1179,8 @@ input[type=file] { display: none; }
     <div class="sec-desc">Almost there — review your application and submit.</div>
   </div>
 
+  <div id="reviewContent" style="margin-bottom:24px"></div>
+
   <div class="nav-row">
     <button class="btn btn-ghost" onclick="prev()">&#8592; Back</button>
     <button class="btn btn-gold" id="submitBtn" onclick="submitForm()">Submit Application</button>
@@ -1285,6 +1300,7 @@ function goTo(n) {
   document.getElementById('step-' + n).classList.add('active');
   updateProgress();
   if (n === 6) populateConsentInfo();
+  if (n === 7) populateReview();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -1316,6 +1332,162 @@ function populateConsentInfo() {
   const msg = document.getElementById('consentSentMsg');
   if (btn) { btn.textContent = 'Send Consent Form'; btn.disabled = false; btn.style.display = ''; }
   if (msg) msg.style.display = 'none';
+}
+
+function populateReview() {
+  const gv = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+  const gc = sel => { const el = document.querySelector(sel); return el ? el.textContent.trim() : ''; };
+  const fmt$ = v => { const n = parseFloat(v); return isNaN(n) || n === 0 ? '' : '$' + n.toLocaleString('en-AU'); };
+  const fmtDate = v => { if (!v) return ''; const [y,m,d] = v.split('-'); return (d||'')+'/'+(m||'')+'/'+(y||''); };
+  const rvRow = (label, value) => value ? `<div class="rv-row"><div class="rv-label">${label}</div><div class="rv-value">${value}</div></div>` : '';
+  const rvSub = t => `<div class="rv-sub-head">${t}</div>`;
+  function rvCard(title, step, inner) {
+    if (!inner.trim()) return '';
+    return `<div class="rv-card"><div class="rv-card-head"><div class="rv-card-title">${title}</div><button class="rv-edit-btn" onclick="goTo(${step})">Edit</button></div><div class="rv-card-body">${inner}</div></div>`;
+  }
+  let html = '';
+
+  // Step 1 – Purpose
+  html += rvCard('Loan Purpose', 1,
+    rvRow('Purpose', state.purpose === 'business' ? 'Business' : 'Personal')
+  );
+
+  // Step 2 – Asset & Loan
+  const isNonAsset = NON_ASSET.includes(state.finType);
+  let s2 = rvRow('Finance Type', state.finType);
+  if (!isNonAsset) {
+    const asset = [gv('fYear'), gv('fMake'), gv('fModel')].filter(Boolean).join(' ');
+    s2 += rvRow('Asset', asset);
+    s2 += rvRow('Condition', gc('#condChoices .ch.sel'));
+    s2 += rvRow('Purchasing From', gc('#purchaseFromChoices .ch.sel'));
+    s2 += rvRow('Rego', gv('fRego'));
+    s2 += rvRow('VIN', gv('fVin'));
+    s2 += rvRow('Asset Price', fmt$(gv('fAssetPrice')));
+    const dep = gv('fDeposit');
+    if (dep && dep !== '0') s2 += rvRow('Deposit', fmt$(dep));
+  } else {
+    s2 += rvRow('Description', gv('fDesc'));
+  }
+  const loanDisp = document.getElementById('loanAmtDisplay')?.textContent || '';
+  if (loanDisp && loanDisp !== '$0') s2 += rvRow('Estimated Loan Amount', loanDisp);
+  const dur = gv('fLoanDur');
+  s2 += rvRow('Loan Duration', dur + ' Year' + (dur !== '1' ? 's' : ''));
+  const bal = gv('fBalloon');
+  if (bal && bal !== '0%') s2 += rvRow('Balloon Payment', bal);
+  html += rvCard('Asset & Loan Details', 2, s2);
+
+  // Step 3 – Applicants & Personal
+  let s3 = rvRow('Applicants', state.applicantType === 'co' ? 'Primary + Co-Borrower' : 'Solo Applicant');
+  s3 += rvSub('Applicant 1');
+  s3 += rvRow('Name', [gc('#a1TitleChoices .ch.sel'), gv('a1FirstName'), gv('a1LastName')].filter(Boolean).join(' '));
+  s3 += rvRow('Mobile', gv('a1Mobile'));
+  s3 += rvRow('Email', gv('a1Email'));
+  s3 += rvRow('Date of Birth', fmtDate(gv('a1DOB')));
+  s3 += rvRow('Marital Status', gc('#a1MaritalChoices .ch.sel'));
+  s3 += rvRow('Dependents', gv('a1Deps'));
+  s3 += rvRow('Residency', gc('#a1ResChoices .ch.sel'));
+  const a1Lic = gv('a1LicNo');
+  if (a1Lic) s3 += rvRow('Licence No.', a1Lic + (gv('a1LicExp') ? '  (exp ' + fmtDate(gv('a1LicExp')) + ')' : ''));
+  const a1Pass = gv('a1PassNo');
+  if (a1Pass) s3 += rvRow('Passport No.', a1Pass + (gv('a1PassExp') ? '  (exp ' + fmtDate(gv('a1PassExp')) + ')' : ''));
+  s3 += rvRow('Living Situation', gc('#a1LivingChoices .ch.sel'));
+  s3 += rvRow('Address', [gv('a1Street'), gv('a1Suburb'), gv('a1State'), gv('a1Post')].filter(Boolean).join(', '));
+  const prevStreet = gv('a1PrevStreet');
+  if (prevStreet) s3 += rvRow('Previous Address', [prevStreet, gv('a1PrevSuburb'), gv('a1PrevState'), gv('a1PrevPost')].filter(Boolean).join(', '));
+  if (state.applicantType === 'co') {
+    s3 += rvSub('Applicant 2');
+    s3 += rvRow('Name', [gc('#a2TitleChoices .ch.sel'), gv('a2FirstName'), gv('a2LastName')].filter(Boolean).join(' '));
+    s3 += rvRow('Mobile', gv('a2Mobile'));
+    s3 += rvRow('Email', gv('a2Email'));
+    s3 += rvRow('Date of Birth', fmtDate(gv('a2DOB')));
+    s3 += rvRow('Dependents', gv('a2Deps'));
+    s3 += rvRow('Residency', gc('#a2ResChoices .ch.sel'));
+    s3 += rvRow('Living Situation', gc('#a2LivingChoices .ch.sel'));
+  }
+  html += rvCard('Applicants & Personal', 3, s3);
+
+  // Step 4 – Employment / Company
+  let s4 = '';
+  if (state.purpose === 'business') {
+    s4 += rvRow('ABN', gv('bizABN'));
+    s4 += rvRow('Company Name', gv('bizName'));
+    s4 += rvRow('Industry', gv('bizIndustry'));
+    s4 += rvRow('Entity Type', state.bizEntity);
+    s4 += rvRow('ABN Duration', gv('bizABNDur'));
+    const gstChecked = document.getElementById('bizGST')?.checked;
+    s4 += rvRow('GST Registered', gstChecked ? 'Yes' + (gv('bizGSTDur') ? ' (' + gv('bizGSTDur') + ')' : '') : 'No');
+    s4 += rvRow('Monthly Revenue', fmt$(gv('bizRevenue')));
+    s4 += rvRow('Monthly Expenses', fmt$(gv('bizExpenses')));
+    s4 += rvRow('Company Address', [gv('bizStreet'), gv('bizSuburb'), gv('bizState'), gv('bizPost')].filter(Boolean).join(', '));
+  } else {
+    s4 += rvSub('Applicant 1');
+    s4 += rvRow('Employment Status', gc('#a1EmpChoices .ch.sel'));
+    s4 += rvRow('ABN', gv('a1ABN'));
+    s4 += rvRow('Employer', gv('a1EmpName'));
+    s4 += rvRow('Occupation', gv('a1Occ'));
+    const empTime = [gv('a1EmpYrs') ? gv('a1EmpYrs') + ' yr' + (+gv('a1EmpYrs') !== 1 ? 's' : '') : '', gv('a1EmpMos') ? gv('a1EmpMos') + ' mo' + (+gv('a1EmpMos') !== 1 ? 's' : '') : ''].filter(Boolean).join(' ');
+    s4 += rvRow('Time with Employer', empTime);
+    const incAmt = gv('a1Income') || gv('a1CentreIncome');
+    if (incAmt) {
+      const incTax = gc('#a1TaxChoices .ch.sel') || gc('#a1CTaxChoices .ch.sel');
+      const incFreq = gc('#a1FreqChoices .ch.sel') || gc('#a1CFreqChoices .ch.sel');
+      s4 += rvRow('Income', fmt$(incAmt) + (incFreq ? ' ' + incFreq.toLowerCase() : '') + (incTax ? ' (' + incTax.toLowerCase() + ')' : ''));
+    }
+    const otherAmt = gv('a1OtherIncAmt');
+    if (otherAmt && otherAmt !== '0') {
+      s4 += rvRow('Other Income', fmt$(otherAmt) + '/mo' + (gc('#a1OtherIncTypeChoices .ch.sel') ? ' (' + gc('#a1OtherIncTypeChoices .ch.sel') + ')' : ''));
+    }
+    if (state.applicantType === 'co') {
+      s4 += rvSub('Applicant 2');
+      s4 += rvRow('Employment Status', gc('#a2EmpChoices .ch.sel'));
+    }
+  }
+  html += rvCard(state.purpose === 'business' ? 'Company & Employment' : 'Employment & Income', 4, s4);
+
+  // Step 5 – Assets, Liabilities, Expenses
+  let s5 = '';
+  const assetEls = document.querySelectorAll('#assetList1 .entry');
+  if (assetEls.length) {
+    s5 += rvSub('Assets');
+    assetEls.forEach(e => {
+      const cat = e.querySelector('select')?.value || '';
+      const inputs = e.querySelectorAll('input');
+      const desc = inputs[0]?.value || '';
+      s5 += rvRow([cat, desc].filter(Boolean).join(' – '), fmt$(inputs[1]?.value || ''));
+    });
+  }
+  const liabEls = document.querySelectorAll('#liabList1 .entry');
+  if (liabEls.length) {
+    s5 += rvSub('Liabilities');
+    liabEls.forEach(e => {
+      const cat = e.querySelector('select')?.value || '';
+      const inputs = e.querySelectorAll('input');
+      const desc = inputs[0]?.value || '';
+      const balance = inputs[1]?.value;
+      const repay = inputs[inputs.length - 1]?.value;
+      const valStr = [balance ? fmt$(balance) + ' bal.' : '', repay ? fmt$(repay) + '/mo' : ''].filter(Boolean).join(', ');
+      s5 += rvRow([cat, desc].filter(Boolean).join(' – '), valStr);
+    });
+  }
+  if (state.purpose === 'personal') {
+    const nonZeroExp = [];
+    let totalExp = 0;
+    document.querySelectorAll('#expenseGrid1 .exp-row').forEach(e => {
+      const lbl = e.querySelector('.exp-lbl')?.textContent || '';
+      const val = parseFloat(e.querySelector('input')?.value) || 0;
+      totalExp += val;
+      if (val > 0) nonZeroExp.push([lbl, fmt$(String(val)) + '/mo']);
+    });
+    if (nonZeroExp.length) {
+      s5 += rvSub('Monthly Expenses');
+      nonZeroExp.forEach(([lbl, val]) => { s5 += rvRow(lbl, val); });
+      s5 += `<div class="rv-row" style="background:var(--g50)"><div class="rv-label" style="font-weight:700;color:var(--g900)">Total</div><div class="rv-value" style="font-weight:700;color:var(--g900)">${fmt$(String(totalExp))}/mo</div></div>`;
+    }
+  }
+  if (!s5) s5 += rvRow('Assets & Liabilities', 'None added');
+  html += rvCard('Assets, Liabilities & Expenses', 5, s5);
+
+  document.getElementById('reviewContent').innerHTML = html;
 }
 
 // Consent form URLs by loan purpose
