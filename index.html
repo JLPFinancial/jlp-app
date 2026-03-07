@@ -1948,35 +1948,6 @@ function showToast(msg, duration = 3500) {
 }
 
 // --- SUBMIT ---
-// --- SIGNATURE HELPERS ---
-function fmtSigningDate() {
-  const now = new Date();
-  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const d = now.getDate();
-  return `${days[now.getDay()]}, ${d} ${months[now.getMonth()]} ${now.getFullYear()} ${now.toLocaleTimeString('en-AU', {hour:'2-digit',minute:'2-digit',hour12:true})} (Australia/Melbourne)`;
-}
-function fmtShortDate() {
-  const now = new Date();
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  return `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-}
-
-function onSigInput(n) {
-  const val = document.getElementById('sig'+n+'Input').value.trim();
-  const metaEl = document.getElementById('sig'+n+'Meta');
-  const tsEl = document.getElementById('sig'+n+'Ts');
-  const dateEl = document.getElementById('sig'+n+'Date');
-  if (val.length > 1) {
-    if (dateEl) dateEl.textContent = fmtShortDate();
-    if (tsEl) tsEl.textContent = fmtSigningDate();
-    if (metaEl) metaEl.style.display = 'flex';
-  } else {
-    if (metaEl) metaEl.style.display = 'none';
-    if (dateEl) dateEl.textContent = '';
-  }
-}
-
 function submitForm() {
   const btn = document.getElementById('submitBtn');
   btn.textContent = 'Submitting...';
