@@ -27,7 +27,7 @@ const CORS_HEADERS = {
 Deno.serve(async (req: Request) => {
   // CORS preflight
   if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: CORS_HEADERS });
+    return new Response(null, { status: 200, headers: CORS_HEADERS });
   }
 
   if (req.method !== "POST") {
@@ -47,6 +47,38 @@ Deno.serve(async (req: Request) => {
   console.log("Application received:", app.app_id ?? app.id);
 
   // --- 1. Upsert into Supabase applications table ---
+  const a1 = (app.a1 ?? {}) as Record<string, string>;
+  const biz = (app.biz ?? {}) as Record<string, string>;
+
+  const dbRow = {
+    app_id: app.app_id ?? app.id ?? null,
+    submitted_at: app.submitted_at ?? app.submittedAt ?? new Date().toISOString(),
+    purpose: app.purpose ?? null,
+    fin_type: app.fin_type ?? app.finType ?? null,
+    loan_amount: app.loan_amount ?? app.loanAmount ?? null,
+    loan_duration: app.loan_duration ?? app.loanDuration ?? null,
+    make: app.make ?? null,
+    model: app.model ?? null,
+    year: app.year ?? null,
+    condition: app.condition ?? null,
+    first_name: a1.firstName ?? null,
+    last_name: a1.lastName ?? null,
+    email: a1.email ?? null,
+    mobile: a1.mobile ?? null,
+    street: a1.street ?? null,
+    suburb: a1.suburb ?? null,
+    state: a1.state ?? null,
+    postcode: a1.postcode ?? null,
+    emp_status: a1.empStatus ?? null,
+    emp_name: a1.empName ?? null,
+    occupation: a1.occupation ?? null,
+    income: a1.income ?? null,
+    biz_name: biz.name ?? null,
+    biz_abn: biz.abn ?? null,
+    biz_industry: biz.industry ?? null,
+    raw: app,
+  };
+
   let supabaseOk = false;
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/applications`, {
@@ -57,7 +89,7 @@ Deno.serve(async (req: Request) => {
         "Authorization": `Bearer ${SUPABASE_SERVICE_KEY}`,
         "Prefer": "resolution=merge-duplicates,return=minimal",
       },
-      body: JSON.stringify(app),
+      body: JSON.stringify(dbRow),
     });
     supabaseOk = res.ok || res.status === 409;
     if (!res.ok && res.status !== 409) {
@@ -71,8 +103,6 @@ Deno.serve(async (req: Request) => {
   }
 
   // --- 2. Forward to GHL CRM webhook ---
-  const a1 = (app.a1 ?? {}) as Record<string, string>;
-  const biz = (app.biz ?? {}) as Record<string, string>;
 
   const firstName = a1.firstName ?? "";
   const lastName  = a1.lastName  ?? "";

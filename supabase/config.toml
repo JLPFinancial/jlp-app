@@ -1,0 +1,8 @@
+[functions.super-handler]
+verify_jwt = false
+
+[functions.consent-complete]
+verify_jwt = false
+
+[functions.submit-application]
+verify_jwt = false
