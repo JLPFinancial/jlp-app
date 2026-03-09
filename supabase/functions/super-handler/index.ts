@@ -36,7 +36,8 @@ Deno.serve(async (req: Request) => {
 
   let app: Record<string, unknown>;
   try {
-    app = await req.json();
+    const text = await req.text();
+    app = JSON.parse(text);
   } catch {
     return new Response(JSON.stringify({ ok: false, error: "Invalid JSON" }), {
       status: 400,
