@@ -2114,11 +2114,7 @@ function submitForm() {
         };
         const res = await fetch('https://gxwwcrcllhaaoewgcbeo.supabase.co/functions/v1/super-handler', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4d3djcmNsbGhhYW9ld2djYmVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MjE4MTIsImV4cCI6MjA4ODA5NzgxMn0.twL-AmGGqfH29Nsl2p-Ezqi5zJ_h-3TOrguFAdjiET8',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4d3djcmNsbGhhYW9ld2djYmVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MjE4MTIsImV4cCI6MjA4ODA5NzgxMn0.twL-AmGGqfH29Nsl2p-Ezqi5zJ_h-3TOrguFAdjiET8',
-          },
+          headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify(payload)
         });
         const result = await res.json().catch(() => ({}));
